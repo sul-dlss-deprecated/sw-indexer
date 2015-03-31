@@ -22,6 +22,10 @@ module SwIndexerService
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
     config.autoload_paths += %W(#{config.root}/lib)
+
+    config.solr_config_file_path = "#{config.root}/config/solr.yml"
+    DiscoveryIndexer::PURL_DEFAULT='http://purl.stanford.edu/'
   end
 end
