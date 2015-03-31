@@ -18,4 +18,4 @@ before_script:
 script: bundle exec rake spec 
 
 after_success:
-  coveralls
+- CI=true TRAVIS=true coveralls --verbose
