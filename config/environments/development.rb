@@ -38,4 +38,10 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  config.solr_config_file_path = "#{config.root}/config/sw-solr.yml"
+  config.autoload_paths += %W(#{config.root}/lib)  # this will autoload any files in your lib directory
+
 end
+
+DiscoveryIndexer::PURL_DEFAULT='http://purl.stanford.edu/'
