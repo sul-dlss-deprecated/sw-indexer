@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<publicObject id="druid:yg867hg1375" published="2015-02-26T10:50:07-08:00">
+  <identityMetadata>
+    <objectId>druid:oo000oo0000</objectId>
+    <objectCreator>DOR</objectCreator>
+    <objectLabel>Object Label</objectLabel>
+    <objectType>collection</objectType>
+    <adminPolicy>druid:aa111bb2222</adminPolicy>
+    <otherId name="catkey">9615156</otherId>
+    <otherId name="uuid">8f1feb20-4b29-11e3-8e31-0050569b3c3c</otherId>
+    <tag>Remediated By : 4.17.1</tag>
+  </identityMetadata>
+  <xml/>
+  <rightsMetadata>
+    <access type="discover">
+      <machine>
+        <world/>
+      </machine>
+    </access>
+    <access type="read">
+      <machine>
+        <world/>
+      </machine>
+    </access>
+    <use>
+      <human type="useAndReproduction"/>
+      <human type="creativeCommons"/>
+      <machine type="creativeCommons"/>
+    </use>
+    <copyright>
+      <human type="copyright">Copyright</human>
+    </copyright>
+  </rightsMetadata>
+  <rdf:RDF xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:hydra="http://projecthydra.org/ns/relations#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:Description rdf:about="info:fedora/druid:oo000oo0000">
+    </rdf:Description>
+  </rdf:RDF>
+  <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+    <dc:title>DC title</dc:title>
+    <dc:contributor>DC contributor</dc:contributor>
+    <dc:type>Collection</dc:type>
+    <dc:date>DC date</dc:date>
+    <dc:language>DC language</dc:language>
+    <dc:format>DC format</dc:format>
+    <dc:description>DC description</dc:description>
+    <dc:rights>DC rights</dc:rights>
+    <dc:description type="biographical/historical">DC description Biographical/Historical</dc:description>
+    <dc:description>DC description</dc:description>
+    <dc:coverage>DC coverage</dc:coverage>
+  </oai_dc:dc>
+  <ReleaseDigest/>
+</publicObject>

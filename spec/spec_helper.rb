@@ -88,3 +88,14 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+
+def setup(pid,mods_fixture,purl_fixture)
+  @pid=pid
+  @mods=Stanford::Mods::Record.new
+  @mods.from_nk_node(Nokogiri::XML(open("spec/fixtures/#{mods_fixture}"),nil,'UTF-8'))
+  public_xml=Nokogiri::XML(open("spec/fixtures/#{purl_fixture}"),nil,'UTF-8')
+  purl_parser=DiscoveryIndexer::InputXml::PurlxmlParserStrict.new(pid, public_xml)
+  @purl=purl_parser.parse()
+  @collection_names={'oo000oo0000'=>'Collection Name'}
+  @mapper = SwMapper.new(@pid,@mods,@purl,@collection_names)
+end
