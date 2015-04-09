@@ -17,7 +17,7 @@ describe SwMapper do
 	       :author_person_display => ["Personal name"],
 	       :author_person_facet => ["Personal name"],
 	       :author_person_full_display => ["Personal name"],
-	       :author_sort => " Item title",
+	       :author_sort => "\u{10FFFF} Item title",
 	       :creation_year_isi => "1909",
 	       :era_facet => nil,
 	       :format => ["Image"],
