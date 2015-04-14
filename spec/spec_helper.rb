@@ -89,7 +89,7 @@ RSpec.configure do |config|
 =end
 end
 
-def setup(pid,mods_fixture,purl_fixture)
+def setup_with_fixture(pid,mods_fixture,purl_fixture)
   @pid=pid
   @mods=Stanford::Mods::Record.new
   @mods.from_nk_node(Nokogiri::XML(open("spec/fixtures/#{mods_fixture}"),nil,'UTF-8'))
@@ -98,4 +98,16 @@ def setup(pid,mods_fixture,purl_fixture)
   @purl=purl_parser.parse()
   @collection_names={'oo000oo0000'=>'Collection Name'}
   @mapper = SwMapper.new(@pid,@mods,@purl,@collection_names)
+end
+
+def setup_with_xml(fake_druid,mods_xml,purl_xml)
+  @pid=fake_druid
+  @mods=Stanford::Mods::Record.new
+  mods_data = @mods.from_nk_node(Nokogiri::XML(mods_xml))
+  pub_xml = Nokogiri::XML(purl_xml)
+  purl_parser=DiscoveryIndexer::InputXml::PurlxmlParserStrict.new(@pid, pub_xml)
+  purl=purl_parser.parse()
+  collection_names={'oo000oo0000'=>'Collection Name'}
+  mapper = SwMapper.new(@pid,mods_data,purl,collection_names)
+  @result_doc = mapper.convert_to_solr_doc
 end
