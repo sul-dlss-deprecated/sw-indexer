@@ -6,6 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+VERSION = File.read('VERSION')
 module SwIndexerService
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -24,7 +25,8 @@ module SwIndexerService
     config.active_record.raise_in_transactional_callbacks = true
 
     config.autoload_paths += %W(#{config.root}/lib)
-
+    config.app_version = VERSION # read from VERSION file at base of website
+    config.app_name = 'SearchWorks-Indexing-Service'
     config.solr_config_file_path = "#{config.root}/config/solr.yml"
     DiscoveryIndexer::PURL_DEFAULT='http://purl.stanford.edu/'
   end

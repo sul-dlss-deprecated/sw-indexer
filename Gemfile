@@ -35,21 +35,26 @@ gem 'base_indexer'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
+# Use debugger
+# gem 'debugger', group: [:development, :test]
 
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
-
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-
+# testing
+group :test do
   gem 'rspec-rails'
   gem 'simplecov', :require => false
   gem 'simplecov-rcov', :require => false
   gem 'equivalent-xml'
 end
 
+# gems necessary for capistrano deployment
+group :deployment do
+  gem 'capistrano', '~> 3.0'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
+  gem 'lyberteam-capistrano-devel', '~>3'
+  gem 'capistrano-rvm'
+end
+gem 'squash_ruby', :require => 'squash/ruby'
+gem 'squash_rails', :require => 'squash/rails'
 gem 'coveralls', require: false
 
