@@ -7,7 +7,9 @@
 # Ignore bundler config.
 /.bundle
 config/solr.yml
+coverage/*
 
+.rake_tasks*
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
