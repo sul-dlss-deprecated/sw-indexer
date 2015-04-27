@@ -35,5 +35,3 @@ namespace :deploy do
   after :publishing, :restart
 
 end
-
-before 'deploy:compile_assets', 'squash:write_revision'
