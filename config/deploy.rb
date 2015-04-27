@@ -13,11 +13,7 @@ set :linked_files, %w{config/database.yml config/solr.yml}
 # Default value for linked_dirs is []
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle}
 
-last_tag = `git describe --abbrev=0 --tags`.strip
-default_tag='master'
-set :tag, ask("Tag to deploy (make sure to push the tag first): [default: #{default_tag}, last tag: #{last_tag}] ", default_tag)
-
-set :branch, fetch(:tag)
+set :branch, 'master'
 
 set :deploy_host, ask("Server", 'enter in the server you are deploying to. do not include .stanford.edu')
 server "#{fetch(:deploy_host)}.stanford.edu", user: fetch(:user), roles: %w{web db app}
@@ -33,5 +29,4 @@ namespace :deploy do
     end
   end
   after :publishing, :restart
-
 end
