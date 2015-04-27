@@ -209,7 +209,6 @@ protected
       elsif display_type == "file"
         ids = @purlxml.file_ids
       end
-      return nil if ids.empty?
       ids
     end
   end
