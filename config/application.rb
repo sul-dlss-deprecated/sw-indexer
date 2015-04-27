@@ -27,5 +27,6 @@ module SwIndexerService
     config.app_name = 'SearchWorks-Indexing-Service'
     config.solr_config_file_path = "#{config.root}/config/solr.yml"
     DiscoveryIndexer::PURL_DEFAULT='http://purl.stanford.edu/'
+    config.dor_fetcher_url = 'https://dorfetcher-prod.stanford.edu'
   end
 end
