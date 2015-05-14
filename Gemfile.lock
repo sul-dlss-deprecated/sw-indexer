@@ -29,7 +29,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.8)
     arel (5.0.1.20140414130214)
-    base_indexer (0.3.5)
+    base_indexer (0.3.6)
       discovery-indexer
       rails (~> 4.1, >= 4.1.9)
       retries
@@ -103,7 +103,7 @@ GEM
       thor (>= 0.14, < 2.0)
     json (1.8.2)
     libv8 (3.16.14.7)
-    lyberteam-capistrano-devel (3.1.0)
+    lyberteam-capistrano-devel (3.2.0)
       capistrano (~> 3.0)
       capistrano-bundle_audit (>= 0.0.3)
       capistrano-one_time_key
@@ -112,7 +112,7 @@ GEM
       mime-types (>= 1.16, < 3)
     mime-types (2.5)
     mini_portile (0.6.2)
-    minitest (5.6.0)
+    minitest (5.6.1)
     mods (2.0.3)
       iso-639
       nokogiri
@@ -130,7 +130,7 @@ GEM
       activesupport (>= 3.2.18)
       i18n
       nokogiri
-    rack (1.5.2)
+    rack (1.5.3)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.1.10)
@@ -191,13 +191,13 @@ GEM
     simplecov-html (0.10.0)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
-    spring (1.3.4)
+    spring (1.3.6)
     sprockets (2.12.3)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
-    sprockets-rails (2.2.4)
+    sprockets-rails (2.3.1)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
@@ -253,6 +253,7 @@ DEPENDENCIES
   simplecov
   simplecov-rcov
   spring
+  sprockets (= 2.12.3)
   sqlite3
   therubyracer
   turbolinks
