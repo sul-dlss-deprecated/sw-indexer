@@ -29,8 +29,9 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.8)
     arel (5.0.1.20140414130214)
-    base_indexer (0.3.6)
+    base_indexer (0.3.8)
       discovery-indexer
+      is_it_working-cbeer
       rails (~> 4.1, >= 4.1.9)
       retries
     builder (3.2.2)
@@ -72,7 +73,7 @@ GEM
       term-ansicolor (~> 1.3)
       thor (~> 0.19.1)
     diff-lcs (1.2.5)
-    discovery-indexer (0.9.3)
+    discovery-indexer (0.9.4)
       nokogiri
       rest-client
       retries
@@ -94,6 +95,7 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
+    is_it_working-cbeer (1.0.16)
     iso-639 (0.2.5)
     jbuilder (2.2.13)
       activesupport (>= 3.0.0, < 5)
@@ -232,14 +234,14 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  base_indexer (>= 0.3.3)
+  base_indexer (>= 0.3.8)
   capistrano (~> 3.0)
   capistrano-bundler
   capistrano-rails
   capistrano-rvm
   coffee-rails (~> 4.0.0)
   coveralls
-  discovery-indexer (>= 0.8)
+  discovery-indexer (>= 0.9.4)
   dor-fetcher (>= 1.1.1)
   equivalent-xml
   jbuilder (~> 2.0)
