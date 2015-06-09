@@ -4,7 +4,7 @@ class SwMapper < DiscoveryIndexer::Mapper::GeneralMapper
   # @druid = object pid (no "druid:" prefix)
   # @modsxml == Stanford::Mods::Record class object (@modsxml.mods_ng_xml == Nokogiri document (for custom parsing)
   # @purlxml == DiscoveryIndexer::InputXml::PurlxmlModel class object (@purlxml.public_xml == Nokogiri document (for custom parsing)
-  # @collection_names == hash of collections the @druid belongs to (key = collection druid, value = collection name)
+  # @collection_data == hash of collections the @druid belongs to {'oo000oo0000'=>{label: "Collection Name", catkey: "12345678"}}
   # Create a Hash representing a Solr doc, with all MODS related fields populated.
   # @return [Hash] Hash representing the Solr document
   def convert_to_solr_doc()
@@ -20,12 +20,13 @@ class SwMapper < DiscoveryIndexer::Mapper::GeneralMapper
     solr_doc.update mods_to_others
     solr_doc.update hard_coded_fields
 
-    solr_doc[:collection] = @collection_names.nil? ? [] : @collection_names.keys
+    solr_doc[:collection] = collection
     solr_doc[:modsxml] = @modsxml.to_xml
     solr_doc[:all_search] = @modsxml.text.gsub(/\s+/, ' ')
     solr_doc[:display_type] = display_type
     solr_doc[:file_id] = file_ids
     solr_doc[:collection_with_title] = collection_with_title
+    solr_doc[:collection_type] = "Digital Collection" if @purlxml.is_collection
     return solr_doc
   end
 
@@ -204,10 +205,12 @@ protected
   def file_ids
     @file_ids ||= begin
       ids = []
-      if display_type == "image"
-        ids = @purlxml.image_ids
-      elsif display_type == "file"
-        ids = @purlxml.file_ids
+      if !@purlxml.is_collection then
+        if display_type == "image"
+          ids = @purlxml.image_ids
+        elsif display_type == "file"
+          ids = @purlxml.file_ids
+        end
       end
       ids
     end
@@ -217,23 +220,31 @@ protected
   # @return [Array<String>] druids
   def collection
     @collection ||= begin
-      coll_druids = []
-      @purlxml.collection_druids.each do | cdruid |
-        coll_druids.push cdruid
+      coll_ids = []
+      @collection_data.keys.each do | cdruid |
+        if @collection_data[cdruid][:ckey].nil? then
+          coll_ids.push cdruid
+        else
+          coll_ids.push @collection_data[cdruid][:ckey]
+        end
       end
-      return nil if coll_druids.empty?
-      coll_druids
+      return nil if coll_ids.empty?
+      coll_ids
     end
   end
 
-  # The collection druid and collection title for items in a collection
+  # The collection druid or catkey and collection title for items in a collection
   # for display in SearchWorks
-  # @return [Array<String>] druid -|- title
+  # @return [Array<String>] druid/catkey -|- title
   def collection_with_title
     @collection_with_title ||= begin
-      coll_title = []
-      @collection_names.each do | key, value|
-        coll_title.push "#{key}-|-#{value}"
+     coll_title = []
+     @collection_data.keys.each do | cdruid |
+        if @collection_data[cdruid][:ckey].nil? then
+          coll_title.push "#{cdruid}-|-#{@collection_data[cdruid][:label]}"
+        else
+          coll_title.push "#{@collection_data[cdruid][:ckey]}-|-#{@collection_data[cdruid][:label]}"
+        end
       end
       return nil if coll_title.empty?
       coll_title

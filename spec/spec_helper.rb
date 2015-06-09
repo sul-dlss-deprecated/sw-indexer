@@ -96,8 +96,8 @@ def setup_with_fixture(pid,mods_fixture,purl_fixture)
   public_xml=Nokogiri::XML(open("spec/fixtures/#{purl_fixture}"),nil,'UTF-8')
   purl_parser=DiscoveryIndexer::InputXml::PurlxmlParserStrict.new(pid, public_xml)
   @purl=purl_parser.parse()
-  @collection_names={'oo000oo0000'=>'Collection Name'}
-  @mapper = SwMapper.new(@pid,@mods,@purl,@collection_names)
+  @collection_data={'oo000oo0000'=>{label: "Collection Name", catkey: "12345678"}}
+  @mapper = SwMapper.new(@pid,@mods,@purl,@collection_data)
 end
 
 def setup_with_xml(fake_druid,mods_xml,purl_xml)
@@ -107,7 +107,7 @@ def setup_with_xml(fake_druid,mods_xml,purl_xml)
   pub_xml = Nokogiri::XML(purl_xml)
   purl_parser=DiscoveryIndexer::InputXml::PurlxmlParserStrict.new(@pid, pub_xml)
   purl=purl_parser.parse()
-  collection_names={'oo000oo0000'=>'Collection Name'}
-  mapper = SwMapper.new(@pid,mods_data,purl,collection_names)
+  @collection_data={'oo000oo0000'=>{label: "Collection Name", catkey: "12345678"}}
+  mapper = SwMapper.new(@pid,mods_data,purl,@collection_data)
   @result_doc = mapper.convert_to_solr_doc
 end
