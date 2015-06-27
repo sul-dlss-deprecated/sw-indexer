@@ -29,7 +29,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.8)
     arel (5.0.1.20140414130214)
-    base_indexer (0.4.1)
+    base_indexer (0.4.3)
       discovery-indexer (>= 0.9.5)
       is_it_working-cbeer
       rails (~> 4.1, >= 4.1.9)
@@ -234,7 +234,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  base_indexer (>= 0.4.1)
+  base_indexer (>= 0.4.3)
   capistrano (~> 3.0)
   capistrano-bundler
   capistrano-rails
@@ -255,7 +255,7 @@ DEPENDENCIES
   simplecov
   simplecov-rcov
   spring
-  sprockets (= 2.12.3)
+  sprockets (>= 2.12.3)
   sqlite3
   therubyracer
   turbolinks

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'base_indexer', '>= 0.4.1'
+gem 'base_indexer', '>= 0.4.3'
 #gem 'revs-utils'
 gem 'discovery-indexer', '>= 0.9.5'
 gem 'dor-fetcher', '>= 1.1.1'
@@ -31,7 +31,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 gem 'spring',        group: :development
 
-gem 'sprockets', '2.12.3'
+gem 'sprockets', '>= 2.12.3'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
