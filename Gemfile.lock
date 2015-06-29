@@ -1,5 +1,7 @@
-PATH
-  remote: /Users/laneymcg/Documents/sul-dlss/discovery-indexer
+GIT
+  remote: git://github.com/sul-dlss/discovery-indexer.git
+  revision: 85e9f98cec4d29faec59ae393abeef089d982a08
+  branch: display_type
   specs:
     discovery-indexer (0.9.6)
       nokogiri
