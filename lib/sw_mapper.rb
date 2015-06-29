@@ -188,15 +188,19 @@ protected
   # information on DOR content types:
   #   https://consul.stanford.edu/display/chimera/DOR+content+types%2C+resource+types+and+interpretive+metadata
   #
-  # @return [String] 'collection' or DOR content type
+  # @return [String] 'file' or DOR content type
   def display_type
-    case @purlxml.dor_content_type
-      when 'book'
-        'book'
-      when 'image', 'manuscript', 'map'
-        'image'
-      else
-        'file'
+    if @purlxml.dor_display_type && @purlxml.dor_display_type != ""
+      @purlxml.dor_display_type
+    else
+      case @purlxml.dor_content_type
+        when 'book'
+          'book'
+        when 'image', 'manuscript', 'map'
+          'image'
+        else
+          'file'
+      end
     end
   end
 
