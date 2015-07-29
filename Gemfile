@@ -4,6 +4,7 @@ gem 'base_indexer', '>= 0.4.3'
 gem 'discovery-indexer', '>= 0.9.6'
 gem 'dor-fetcher', '>= 1.1.1'
 gem 'mysql2'
+gem 'responders', '~> 2.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.3'
