@@ -13,7 +13,7 @@ gem 'sqlite3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier', '>= 2.7.2'
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
@@ -62,4 +62,3 @@ group :deployment do
   gem 'capistrano-rvm'
 end
 gem 'coveralls', require: false
-
