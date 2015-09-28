@@ -1,48 +1,43 @@
 class SwIndexerEngine < BaseIndexer::MainIndexerEngine
-  # It is the main indexing function
+  # This is the main Searchworks indexing function for StanfordSync
   #
   # @param druid [String] is the druid for an object e.g., ab123cd4567
-  # @param targets [Array] is an array with the targets list to index towards,
-  #   if it is nil, the method will read the target list from release_tags
+  # @param targets [Hash] is an hash with the targets list along with the
+  #   release tag value for each target; if it is nil, the method will read the
+  #   target list and release tag value from release_tags
   #
-  # @raise it will raise erros if there is any problems happen in any level
-  def index druid, targets=nil
-    # Read input mods and purl
-    purl_model =  read_purl(druid)
-    if purl_model.catkey == nil
-      mods_model =  read_mods(druid)
-      collection_data = get_collection_data(purl_model.collection_druids)
+  # @raise it will raise errors if any problems happen in any level
+  def index(druid, targets = nil)
+    # Read PURL XML for the druid
+    purl_model = read_purl(druid)
 
-      # Map the input to solr_doc
-      solr_doc =  BaseIndexer.mapper_class_name.constantize.new(druid, mods_model, purl_model, collection_data).convert_to_solr_doc
+    # If a catkey exists in the purl_model, stop processing the druid and leave
+    # the method because access to the digital object will be provided by an 856
+    # in the corresponding MARC record
+    return unless purl_model.catkey
 
-      # Get target list
-      targets_hash={}
-      if targets.nil? or targets.length == 0
-        targets_hash = purl_model.release_tags_hash
-      else
-        targets_hash = get_targets_hash_from_param(targets)
-      end
+    # If no catkey in the purl_model, read the MODS for the druid
+    mods_model = read_mods(druid)
 
-      targets_hash = update_targets_before_write(targets_hash, purl_model)
+    # Get the information about the collection the druid is a member of to
+    # include in the indexed solr doc
+    collection_data = get_collection_data(purl_model.collection_druids)
 
-      # Get SOLR configuration and write
-      solr_targets_configs = BaseIndexer.solr_configuration_class_name.constantize.instance.get_configuration_hash
-      BaseIndexer.solr_writer_class_name.constantize.new.process( druid, solr_doc, targets_hash, solr_targets_configs)
+    # Create the solr document for indexing using the Searchworks mapper and the
+    # mods, purl, and collection information
+    solr_doc = BaseIndexer.mapper_class_name.constantize.new(druid, mods_model, purl_model, collection_data).convert_to_solr_doc
+
+    # Get list of indexing targets from parameter input or release_tags directly
+    # from the purl model
+    targets_hash = {}
+    if targets.nil? || targets.length == 0
+      targets_hash = purl_model.release_tags_hash
+    else
+      targets_hash = targets
     end
-  end
 
-  # It allows the consumer to modify the targets list before doing the final writing
-  #  to the solr core. Default behavior returns the targets_hash as it is
-  # @param targets_hash [Hash] a hash of targets with true value
-  # @param purl_model [DiscoveryIndexer::Reader::PurlxmlModel]  represents the purlxml model
-  # @return [Hash] a hash of targets 
-  def update_targets_before_write(targets_hash, purl_model)
-  	if purl_model.catkey != nil
-  	  targets_hash["sw_dev"] = false
-      targets_hash["sw_stage"] = false
-      targets_hash["sw_prod"] = false
-  	end
-    return targets_hash
+    # Get SOLR configuration and write solr docs to the appropriate targets
+    solr_targets_configs = BaseIndexer.solr_configuration_class_name.constantize.instance.get_configuration_hash
+    BaseIndexer.solr_writer_class_name.constantize.new.process(druid, solr_doc, targets_hash, solr_targets_configs)
   end
 end
