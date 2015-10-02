@@ -21,7 +21,7 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
 
     # Get the information about the collection the druid is a member of to
     # include in the indexed solr doc
-    collection_data = get_collection_data(purl_model.collection_druids)
+    collection_data = collection_data(purl_model.collection_druids)
 
     # Create the solr document for indexing using the Searchworks mapper and the
     # mods, purl, and collection information
