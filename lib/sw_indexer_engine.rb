@@ -36,16 +36,18 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
       targets_hash = targets
     end
 
+    targets_hash = update_targets_before_write(targets_hash, purl_model)
+
     # Get SOLR configuration and write solr docs to the appropriate targets
     solr_targets_configs = BaseIndexer.solr_configuration_class_name.constantize.instance.get_configuration_hash
     BaseIndexer.solr_writer_class_name.constantize.new.process(druid, solr_doc, targets_hash, solr_targets_configs)
   end
   def update_targets_before_write(targets_hash, purl_model)
-  	if purl_model.catkey != nil
+    if purl_model.catkey != nil
       targets_hash["Searchworks"] = true
       targets_hash["default"] = true
       targets_hash["sw_stage"] = true
-  	end
+    end
     return targets_hash
   end
 end
