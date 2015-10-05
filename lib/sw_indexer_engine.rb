@@ -14,7 +14,7 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
     # If a catkey exists in the purl_model, stop processing the druid and leave
     # the method because access to the digital object will be provided by an 856
     # in the corresponding MARC record
-    return unless purl_model.catkey
+    return if purl_model.catkey.present?
 
     # If no catkey in the purl_model, read the MODS for the druid
     mods_model = read_mods(druid)
