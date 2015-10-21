@@ -36,9 +36,9 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
       targets_hash = targets
     end
 
-    targets_hash["Searchworks"] = true
-    targets_hash["default"] = true
-    targets_hash["sw_stage"] = true
+    targets_hash['Searchworks'] = true
+    targets_hash['default'] = true
+    targets_hash['sw_stage'] = true
 
     # Get SOLR configuration and write solr docs to the appropriate targets
     solr_targets_configs = BaseIndexer.solr_configuration_class_name.constantize.instance.get_configuration_hash

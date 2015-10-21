@@ -13,7 +13,7 @@ Rails.application.configure do
   config.eager_load = false
 
   # Configure static asset server for tests with Cache-Control for performance.
-  config.serve_static_files  = true
+  config.serve_static_files = true
   config.static_cache_control = 'public, max-age=3600'
 
   # Show full error reports and disable caching.
@@ -38,5 +38,5 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   config.dor_fetcher_url = 'https://dorfetcher-stage.stanford.edu'
-  DiscoveryIndexer::PURL_DEFAULT='http://purl-test.stanford.edu/'
+  DiscoveryIndexer::PURL_DEFAULT = 'http://purl-test.stanford.edu/'
 end
