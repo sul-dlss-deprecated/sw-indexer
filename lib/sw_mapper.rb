@@ -113,7 +113,7 @@ class SwMapper < DiscoveryIndexer::Mapper::GeneralMapper
 
   def hard_coded_fields
     {
-      url_fulltext: "http://purl.stanford.edu/#{@druid}",
+      url_fulltext: "https://purl.stanford.edu/#{@druid}",
       access_facet: 'Online',
       building_facet: 'Stanford Digital Repository'
     }

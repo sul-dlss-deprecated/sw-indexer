@@ -18,7 +18,7 @@
     <titleInfo>
       <title>Collection Title</title>
     </titleInfo>
-    <identifier type="uri">http://purl.stanford.edu/oo000oo0000</identifier>
+    <identifier type="uri">https://purl.stanford.edu/oo000oo0000</identifier>
     <typeOfResource collection="yes"/>
   </relatedItem>
   <accessCondition type="copyright">Access Condition</accessCondition>
