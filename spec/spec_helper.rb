@@ -88,26 +88,3 @@ RSpec.configure do |config|
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
 end
-
-def setup_with_fixture(pid, mods_fixture, purl_fixture)
-  @pid = pid
-  @mods = Stanford::Mods::Record.new
-  @mods.from_nk_node(Nokogiri::XML(open("spec/fixtures/#{mods_fixture}"), nil, 'UTF-8'))
-  public_xml = Nokogiri::XML(open("spec/fixtures/#{purl_fixture}"), nil, 'UTF-8')
-  purl_parser = DiscoveryIndexer::InputXml::PurlxmlParserStrict.new(pid, public_xml)
-  @purl = purl_parser.parse
-  @collection_data = { 'oo000oo0000' => { label: 'Collection Name', catkey: '12345678' } }
-  @mapper = SwMapper.new(@pid, @mods, @purl, @collection_data)
-end
-
-def setup_with_xml(fake_druid, mods_xml, purl_xml)
-  @pid = fake_druid
-  @mods = Stanford::Mods::Record.new
-  mods_data = @mods.from_nk_node(Nokogiri::XML(mods_xml))
-  pub_xml = Nokogiri::XML(purl_xml)
-  purl_parser = DiscoveryIndexer::InputXml::PurlxmlParserStrict.new(@pid, pub_xml)
-  purl = purl_parser.parse
-  @collection_data = { 'oo000oo0000' => { label: 'Collection Name', catkey: '12345678' } }
-  mapper = SwMapper.new(@pid, mods_data, purl, @collection_data)
-  @result_doc = mapper.convert_to_solr_doc
-end
