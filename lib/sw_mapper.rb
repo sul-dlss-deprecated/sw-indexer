@@ -82,17 +82,18 @@ class SwMapper < DiscoveryIndexer::Mapper::GeneralMapper
       pub_date_sort: @modsxml.pub_date_sort,
       imprint_display: @modsxml.pub_date_display,
       pub_date: @modsxml.pub_date_facet,
-      pub_date_display: @modsxml.pub_date_display, # pub_date_display may be deprecated
+      # pub_date_display may be deprecated
+      pub_date_display: @modsxml.pub_date_display
     }
   end
 
   # @return [Hash] Hash representing the pub date
   def mods_to_pub_date
     doc_hash = {}
-    pub_date_sort = @modsxml.pub_date_sort
-    if positive_int? pub_date_sort
-      doc_hash[:pub_year_tisim] = pub_date_sort # for date slider
-      # put the displayable year in the correct field, :creation_year_isi for example
+    if positive_int? @modsxml.pub_date_sort
+      # for date slider
+      doc_hash[:pub_year_tisim] = @modsxml.pub_date_sort
+      # put the displayable year in the correct field
       doc_hash[date_type_sym] = @modsxml.pub_date_sort if date_type_sym
     end
     doc_hash
@@ -101,8 +102,8 @@ class SwMapper < DiscoveryIndexer::Mapper::GeneralMapper
   # @return [Hash] Hash representing some fields
   def mods_to_others
     {
-      format_main_ssim: format_main_ssim,
-      format: format, # for backwards compatibility
+      format_main_ssim: @modsxml.format_main,
+      format: @modsxml.format, # for backwards compatibility
       language: @modsxml.sw_language_facet,
       physical: @modsxml.term_values([:physical_description, :extent]),
       summary_search: @modsxml.term_values(:abstract),
@@ -119,46 +120,12 @@ class SwMapper < DiscoveryIndexer::Mapper::GeneralMapper
     }
   end
 
-  # select one or more format values from the controlled vocabulary here:
-  #   http://searchworks-solr-lb.stanford.edu:8983/solr/select?facet.field=format&rows=0&facet.sort=index
-  # via stanford-mods gem
-  # @return [Array<String>] value(s) in the SearchWorks controlled vocabulary, or []
-  def format
-    vals = @modsxml.format
-    if vals.empty?
-      puts "#{@druid} has no SearchWorks format from MODS - check <typeOfResource> and other implicated MODS elements"
-    end
-    vals
-  end
-
-  # call stanford-mods format_main to get results
-  # @return [Array<String>] value(s) in the SearchWorks controlled vocabulary, or []
-  def format_main_ssim
-    vals = @modsxml.format_main
-    if vals.empty?
-      puts "#{@druid} has no SearchWorks Resource Type from MODS - check <typeOfResource> and other implicated MODS elements"
-    end
-    vals
-  end
-
-  # call stanford-mods sw_genre to get results
-  # @return [Array<String>] value(s)
-  def genre_ssim
-    @modsxml.sw_genre
-  end
-
   protected
 
-  # @return true if the string parses into an int, and if so, the int is >= 0
+  # @return true if the string parses into an int that is >= 0
+  # @return false if the string parses into an int that is < 0
   def positive_int?(str)
-    begin
-      if str.to_i >= 0
-        return true
-      else
-        return false
-      end
-    rescue
-    end
+    return true if str.to_i >= 0
     false
   end
 
@@ -183,7 +150,7 @@ class SwMapper < DiscoveryIndexer::Mapper::GeneralMapper
   #
   # @return [String] 'file' or DOR content type
   def display_type
-    if @purlxml.dor_display_type && @purlxml.dor_display_type != ''
+    if @purlxml.dor_display_type.present?
       @purlxml.dor_display_type
     else
       case @purlxml.dor_content_type
@@ -197,54 +164,40 @@ class SwMapper < DiscoveryIndexer::Mapper::GeneralMapper
     end
   end
 
-  # the @id attribute of resource/file elements that match the display_type, including extension
+  # the @id attribute of resource/file elements that match the display_type
   # @return [Array<String>] filenames
   def file_ids
-    @file_ids ||= begin
-      ids = []
-      unless @purlxml.is_collection
-        if display_type == 'image'
-          ids = @purlxml.image_ids
-        elsif display_type == 'file'
-          ids = @purlxml.file_ids
-        end
-      end
-      ids
-    end
+    return if @purlxml.is_collection
+    return @purlxml.image_ids if display_type == 'image'
+    return @purlxml.file_ids if display_type == 'file'
   end
 
   # the collection druid for items in a collection
   # @return [Array<String>] druids
   def collection
-    @collection ||= begin
-      coll_ids = []
-      @collection_data.keys.each do |cdruid|
-        if @collection_data[cdruid][:ckey].nil?
-          coll_ids.push cdruid
-        else
-          coll_ids.push @collection_data[cdruid][:ckey]
-        end
+    coll_ids = []
+    @collection_data.keys.each do |cdruid|
+      if @collection_data[cdruid][:ckey].nil?
+        coll_ids.push cdruid
+      else
+        coll_ids.push @collection_data[cdruid][:ckey]
       end
-      return nil if coll_ids.empty?
-      coll_ids
     end
+    coll_ids
   end
 
-  # The collection druid or catkey and collection title for items in a collection
-  # for display in SearchWorks
-  # @return [Array<String>] druid/catkey -|- title
+  # The collection druid or ckey and collection title for items
+  # in a collection for display in SearchWorks
+  # @return [Array<String>] druid -|- title or ckey -|- title
   def collection_with_title
-    @collection_with_title ||= begin
-      coll_title = []
-      @collection_data.keys.each do |cdruid|
-        if @collection_data[cdruid][:ckey].nil?
-          coll_title.push "#{cdruid}-|-#{@collection_data[cdruid][:label]}"
-        else
-          coll_title.push "#{@collection_data[cdruid][:ckey]}-|-#{@collection_data[cdruid][:label]}"
-        end
+    coll_title = []
+    @collection_data.keys.each do |cdruid|
+      if @collection_data[cdruid][:ckey].nil?
+        coll_title.push "#{cdruid}-|-#{@collection_data[cdruid][:label]}"
+      else
+        coll_title.push "#{@collection_data[cdruid][:ckey]}-|-#{@collection_data[cdruid][:label]}"
       end
-      return nil if coll_title.empty?
-      coll_title
     end
+    coll_title
   end
 end
