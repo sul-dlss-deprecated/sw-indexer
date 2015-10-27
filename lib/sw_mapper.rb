@@ -168,7 +168,7 @@ class SwMapper < DiscoveryIndexer::Mapper::GeneralMapper
   # @return [Array<String>] filenames
   def file_ids
     return if @purlxml.is_collection
-    return @purlxml.image_ids if display_type == 'image'
+    return @purlxml.image_ids if %w(image book).include?(display_type)
     return @purlxml.file_ids if display_type == 'file'
   end
 

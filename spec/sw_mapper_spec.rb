@@ -10,9 +10,17 @@ describe SwMapper do
     item_public_xml = Nokogiri::XML(item_image_xml, nil, 'UTF-8')
     item_purl_parser = DiscoveryIndexer::InputXml::PurlxmlParserStrict.new(item_pid, item_public_xml)
     @item_purl = item_purl_parser.parse
+
     item_file_public_xml = Nokogiri::XML(item_file_xml, nil, 'UTF-8')
     item_file_purl_parser = DiscoveryIndexer::InputXml::PurlxmlParserStrict.new(item_pid, item_file_public_xml)
     @item_file_purl = item_file_purl_parser.parse
+
+    @item_book_mods = Stanford::Mods::Record.new
+    @item_book_mods.from_str(item_book_mods)
+    item_book_public_xml = Nokogiri::XML(item_book_xml, nil, 'UTF-8')
+    item_book_purl_parser = DiscoveryIndexer::InputXml::PurlxmlParserStrict.new('druid:cg160px5426', item_book_public_xml)
+    @item_book_purl = item_book_purl_parser.parse
+
     coll_pid = 'druid:aa111bb1111'
     @coll_mods = Stanford::Mods::Record.new
     @coll_mods.from_str(coll_issued_mods)
@@ -216,6 +224,10 @@ describe SwMapper do
     end
     context 'is based upon the content type if no display_type' do
       it 'is book when content type is book' do
+        @collection_data = { 'aa000bb1111' => { label: 'Collection Name', catkey: nil } }
+        mapper = SwMapper.new('zz999zz9999', @item_book_mods, @item_book_purl, @collection_data)
+        result_doc = mapper.convert_to_solr_doc
+        expect(result_doc[:display_type]).to eq('book')
       end
       it 'is image when the content type is image, manuscript or map' do
         mapper = SwMapper.new('zz999zz9999', @coll_mods, @coll_purl)
@@ -229,9 +241,9 @@ describe SwMapper do
 
   describe 'file_ids' do
     it 'includes image_ids if display_type is image' do
-      mapper = SwMapper.new('zz999zz9999', @item_mods, @item_purl)
+      mapper = SwMapper.new('cg160px5426', @item_book_mods, @item_book_purl)
       result_doc = mapper.convert_to_solr_doc
-      expect(result_doc[:file_id]).to eq(['a24.jp2', 'a25.jp2', 'a26.jp2', 'a27.jp2', 'a28.jp2'])
+      expect(result_doc[:file_id]).to eq(['cg160px5426_00_0001.jp2', 'cg160px5426_00_0002.jp2', 'cg160px5426_00_0003.jp2', 'cg160px5426_00_0004.jp2', 'cg160px5426_00_0005.jp2'])
     end
     it 'includes file_ids if display_type is file' do
       @collection_data = { 'aa000bb1111' => { label: 'Collection Name', catkey: nil } }
