@@ -38,7 +38,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.8)
     arel (6.0.3)
-    base_indexer (0.5.0)
+    base_indexer (0.6.0)
       discovery-indexer (>= 0.10.0)
       is_it_working-cbeer
       rails (~> 4.1, >= 4.1.9)
@@ -128,7 +128,7 @@ GEM
       mime-types (>= 1.16, < 3)
     mime-types (2.6.2)
     mini_portile (0.6.2)
-    minitest (5.8.1)
+    minitest (5.8.2)
     mods (2.0.3)
       iso-639
       nokogiri
