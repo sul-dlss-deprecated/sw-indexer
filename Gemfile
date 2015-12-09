@@ -34,6 +34,8 @@ gem 'spring',        group: :development
 
 gem 'sprockets', '>= 2.12.3'
 
+gem 'nokogiri'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
