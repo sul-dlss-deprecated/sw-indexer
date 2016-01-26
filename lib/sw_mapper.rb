@@ -30,15 +30,16 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
   # @return [Hash] Hash representing the title fields
   def mods_to_title_fields
-    # title fields
+    short_title = modsxml.sw_short_title
+    full_title = modsxml.sw_full_title
     {
-      title_245a_search: modsxml.sw_short_title,
-      title_245_search: modsxml.sw_full_title,
+      title_245a_search: short_title,
+      title_245_search: full_title,
       title_variant_search: modsxml.sw_addl_titles,
       title_sort: modsxml.sw_sort_title,
-      title_245a_display: modsxml.sw_short_title,
+      title_245a_display: short_title,
       title_display: modsxml.sw_title_display,
-      title_full_display: modsxml.sw_full_title
+      title_full_display: full_title
     }
   end
 
@@ -58,7 +59,7 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     }
   end
 
-  # @return [Hash] Hash representing the search fields
+  # @return [Hash] Hash representing the subjects fields
   def mods_to_subject_search_fields
     {
       # subject search fields

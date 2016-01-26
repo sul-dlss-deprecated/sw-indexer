@@ -42,13 +42,6 @@ describe SwMapper do
         subject_other_search: nil,
         subject_other_subvy_search: nil,
         summary_search: nil,
-        title_245_search: 'Item title.',
-        title_245a_display: 'Item title',
-        title_245a_search: 'Item title',
-        title_display: 'Item title',
-        title_full_display: 'Item title.',
-        title_sort: 'Item title',
-        title_variant_search: [],
         toc_search: nil,
         topic_facet: nil,
         topic_search: nil,
@@ -65,6 +58,44 @@ describe SwMapper do
       }
       expect(mapper).to receive(:convert_to_solr_doc).and_return(expected_doc_hash)
       mapper.convert_to_solr_doc
+    end
+  end
+
+  describe '#mods_to_title_fields' do
+    let(:mapper) { SwMapper.new('oo000oo0000') }
+    before(:example) do
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
+    end
+    it 'returns a hash' do
+      expect(mapper.mods_to_title_fields).to be_an_instance_of(Hash)
+    end
+    it ':title_245a_search from Stanford::Mods::Record.sw_short_title' do
+      expect(smods_rec).to receive(:sw_short_title).and_return('short title')
+      expect(mapper.mods_to_title_fields[:title_245a_search]).to eq 'short title'
+    end
+    it ':title_245_search from Stanford::Mods::Record.sw_full_title' do
+      expect(smods_rec).to receive(:sw_full_title).at_least(1).times.and_return('full title')
+      expect(mapper.mods_to_title_fields[:title_245_search]).to eq 'full title'
+    end
+    it ':title_variant_search from Stanford::Mods::Record.sw_addl_titles' do
+      expect(smods_rec).to receive(:sw_addl_titles).and_return(['addl titles', 'foo'])
+      expect(mapper.mods_to_title_fields[:title_variant_search]).to eq ['addl titles', 'foo']
+    end
+    it ':title_sort from Stanford::Mods::Record.sw_sort_title' do
+      expect(smods_rec).to receive(:sw_sort_title).and_return('sort title')
+      expect(mapper.mods_to_title_fields[:title_sort]).to eq 'sort title'
+    end
+    it ':title_245a_display from Stanford::Mods::Record.sw_short_title' do
+      expect(smods_rec).to receive(:sw_short_title).and_return('short title again')
+      expect(mapper.mods_to_title_fields[:title_245a_search]).to eq 'short title again'
+    end
+    it ':title_display from Stanford::Mods::Record.sw_title_display' do
+      expect(smods_rec).to receive(:sw_title_display).and_return('display title')
+      expect(mapper.mods_to_title_fields[:title_display]).to eq 'display title'
+    end
+    it ':title_full_display from Stanford::Mods::Record.sw_full_title' do
+      expect(smods_rec).to receive(:sw_full_title).at_least(1).times.and_return('full title again')
+      expect(mapper.mods_to_title_fields[:title_245_search]).to eq 'full title again'
     end
   end
 
