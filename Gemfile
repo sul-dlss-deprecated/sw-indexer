@@ -4,10 +4,10 @@ gem 'base_indexer', '>= 0.5.0'
 gem 'discovery-indexer'
 gem 'dor-fetcher', '>= 1.1.1'
 
-gem 'rails', '4.2.3'
+gem 'rails', '4.2.5.1'
 gem 'responders', '~> 2.0'
 # NOTE:  we may not actually be using a database
-gem 'mysql2', '= 0.3.18'
+gem 'mysql2', '~> 0.3.20'
 gem 'sqlite3'
 
 # javascript gems
