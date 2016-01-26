@@ -4,3 +4,14 @@
 require File.expand_path('../config/application', __FILE__)
 
 Rails.application.load_tasks
+
+require 'rubocop/rake_task'
+RuboCop::RakeTask.new(:rubocop) do |task|
+  task.options = ['-l'] # run lint cops only
+end
+
+desc "run specs and rubocop"
+task :default do
+  # runs specs from inherited default rake task
+  Rake::Task[:rubocop].invoke
+end
