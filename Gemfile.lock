@@ -90,6 +90,11 @@ GEM
       retries
       rsolr
       stanford-mods
+    dlss-capistrano (3.2.0)
+      capistrano (~> 3.0)
+      capistrano-bundle_audit (>= 0.0.3)
+      capistrano-one_time_key
+      capistrano-releaseboard
     docile (1.1.5)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
@@ -121,11 +126,6 @@ GEM
     libv8 (3.16.14.13)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
-    lyberteam-capistrano-devel (3.2.0)
-      capistrano (~> 3.0)
-      capistrano-bundle_audit (>= 0.0.3)
-      capistrano-one_time_key
-      capistrano-releaseboard
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.99)
@@ -218,8 +218,6 @@ GEM
       json (~> 1.8)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
-    simplecov-rcov (0.2.3)
-      simplecov (>= 0.4.1)
     spring (1.6.0)
     sprockets (2.12.4)
       hike (~> 1.2)
@@ -269,20 +267,17 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   coveralls
   discovery-indexer
+  dlss-capistrano
   dor-fetcher (>= 1.1.1)
   equivalent-xml
   jbuilder (~> 2.0)
   jquery-rails
-  lyberteam-capistrano-devel (~> 3)
   mysql2 (= 0.3.18)
-  nokogiri
   rails (= 4.2.3)
   responders (~> 2.0)
   rspec-rails
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
-  simplecov
-  simplecov-rcov
   spring
   sprockets (>= 2.12.3)
   sqlite3
