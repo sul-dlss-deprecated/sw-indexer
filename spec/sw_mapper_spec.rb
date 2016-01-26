@@ -21,44 +21,10 @@ describe SwMapper do
       expected_doc_hash =
       {
         all_search: ' Item title Personal name Role still image 1909 1915 Collection Title https://purl.stanford.edu/oo000oo0000 Access Condition ',
-        author_1xx_search: nil,
-        author_7xx_search: ['Personal name'],
-        author_corp_display: [],
-        author_meeting_display: [],
-        author_other_facet: [],
-        author_person_display: ['Personal name'],
-        author_person_facet: ['Personal name'],
-        author_person_full_display: ['Personal name'],
-        author_sort: "\u{10FFFF} Item title",
-        era_facet: nil,
-        format: ['Image'],
-        format_main_ssim: ['Image'],
-        geographic_facet: nil,
-        geographic_search: nil,
         id: 'zz999zz9999',
-        language: [],
-        physical: nil,
-        subject_all_search: nil,
-        subject_other_search: nil,
-        subject_other_subvy_search: nil,
-        summary_search: nil,
-        title_245_search: 'Item title.',
-        title_245a_display: 'Item title',
-        title_245a_search: 'Item title',
-        title_display: 'Item title',
-        title_full_display: 'Item title.',
-        title_sort: 'Item title',
-        title_variant_search: [],
-        toc_search: nil,
-        topic_facet: nil,
-        topic_search: nil,
-        url_suppl: nil,
         display_type: 'image',
-        access_facet: 'Online',
-        building_facet: 'Stanford Digital Repository',
         druid: 'zz999zz9999',
         file_id: ['a24.jp2', 'a25.jp2', 'a26.jp2', 'a27.jp2', 'a28.jp2'],
-        url_fulltext: 'https://purl.stanford.edu/zz999zz9999',
         collection: ['aa000bb1111'],
         collection_with_title: ['aa000bb1111-|-Collection Name'],
         modsxml: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<mods xmlns=\"http://www.loc.gov/mods/v3\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" version=\"3.3\" xsi:schemaLocation=\"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd\">\n      <titleInfo>\n        <title>Item title</title>\n      </titleInfo>\n      <name type=\"personal\">\n        <namePart>Personal name</namePart>\n        <role>\n          <roleTerm authority=\"marcrelator\" type=\"text\">Role</roleTerm>\n        </role>\n      </name>\n      <typeOfResource>still image</typeOfResource>\n      <originInfo>\n        <dateCreated point=\"start\" keyDate=\"yes\">1909</dateCreated>\n        <dateCreated point=\"end\">1915</dateCreated>\n      </originInfo>\n      <relatedItem type=\"host\">\n        <titleInfo>\n          <title>Collection Title</title>\n        </titleInfo>\n        <identifier type=\"uri\">https://purl.stanford.edu/oo000oo0000</identifier>\n        <typeOfResource collection=\"yes\"/>\n      </relatedItem>\n      <accessCondition type=\"copyright\">Access Condition</accessCondition>\n    </mods>\n"
@@ -68,10 +34,139 @@ describe SwMapper do
     end
   end
 
+  describe '#mods_to_title_fields' do
+    let(:mapper) { SwMapper.new('oo000oo0000') }
+    before(:example) do
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
+    end
+    it 'returns a hash' do
+      expect(mapper.mods_to_title_fields).to be_an_instance_of(Hash)
+    end
+    it ':title_245a_search from Stanford::Mods::Record.sw_short_title' do
+      expect(smods_rec).to receive(:sw_short_title).and_return('short title')
+      expect(mapper.mods_to_title_fields[:title_245a_search]).to eq 'short title'
+    end
+    it ':title_245_search from Stanford::Mods::Record.sw_full_title' do
+      expect(smods_rec).to receive(:sw_full_title).at_least(1).times.and_return('full title')
+      expect(mapper.mods_to_title_fields[:title_245_search]).to eq 'full title'
+    end
+    it ':title_variant_search from Stanford::Mods::Record.sw_addl_titles' do
+      expect(smods_rec).to receive(:sw_addl_titles).and_return(['addl titles', 'foo'])
+      expect(mapper.mods_to_title_fields[:title_variant_search]).to eq ['addl titles', 'foo']
+    end
+    it ':title_sort from Stanford::Mods::Record.sw_sort_title' do
+      expect(smods_rec).to receive(:sw_sort_title).and_return('sort title')
+      expect(mapper.mods_to_title_fields[:title_sort]).to eq 'sort title'
+    end
+    it ':title_245a_display from Stanford::Mods::Record.sw_short_title' do
+      expect(smods_rec).to receive(:sw_short_title).and_return('short title again')
+      expect(mapper.mods_to_title_fields[:title_245a_search]).to eq 'short title again'
+    end
+    it ':title_display from Stanford::Mods::Record.sw_title_display' do
+      expect(smods_rec).to receive(:sw_title_display).and_return('display title')
+      expect(mapper.mods_to_title_fields[:title_display]).to eq 'display title'
+    end
+    it ':title_full_display from Stanford::Mods::Record.sw_full_title' do
+      expect(smods_rec).to receive(:sw_full_title).at_least(1).times.and_return('full title again')
+      expect(mapper.mods_to_title_fields[:title_245_search]).to eq 'full title again'
+    end
+  end
+
+  describe '#mods_to_author_fields' do
+    let(:mapper) { SwMapper.new('oo000oo0000') }
+    before(:example) do
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
+    end
+    it 'returns a hash' do
+      expect(mapper.mods_to_author_fields).to be_an_instance_of(Hash)
+    end
+    it ':author_1xx_search from Stanford::Mods::Record.sw_main_author' do
+      expect(smods_rec).to receive(:sw_main_author).and_return('main author')
+      expect(mapper.mods_to_author_fields[:author_1xx_search]).to eq 'main author'
+    end
+    it ':author_7xx_search from Stanford::Mods::Record.sw_addl_authors' do
+      expect(smods_rec).to receive(:sw_addl_authors).and_return(['author 1', 'author 2'])
+      expect(mapper.mods_to_author_fields[:author_7xx_search]).to eq ['author 1', 'author 2']
+    end
+    it ':author_person_facet from Stanford::Mods::Record.sw_person_authors' do
+      expect(smods_rec).to receive(:sw_person_authors).and_return(['author 3', 'author 4'])
+      expect(mapper.mods_to_author_fields[:author_person_facet]).to eq ['author 3', 'author 4']
+    end
+    it ':author_other_facet from Stanford::Mods::Record.sw_impersonal_authors' do
+      expect(smods_rec).to receive(:sw_impersonal_authors).and_return(['author 5', 'author 6'])
+      expect(mapper.mods_to_author_fields[:author_other_facet]).to eq ['author 5', 'author 6']
+    end
+    it ':author_sort from Stanford::Mods::Record.sw_sort_author' do
+      expect(smods_rec).to receive(:sw_sort_author).and_return('sort author')
+      expect(mapper.mods_to_author_fields[:author_sort]).to eq 'sort author'
+    end
+    it ':author_corp_display from Stanford::Mods::Record.sw_corporate_authors' do
+      expect(smods_rec).to receive(:sw_corporate_authors).and_return('main author')
+      expect(mapper.mods_to_author_fields[:author_corp_display]).to eq 'main author'
+    end
+    it ':author_meeting_display from Stanford::Mods::Record.sw_meeting_authors' do
+      expect(smods_rec).to receive(:sw_meeting_authors).and_return(['author 9', 'author 10'])
+      expect(mapper.mods_to_author_fields[:author_meeting_display]).to eq ['author 9', 'author 10']
+    end
+    it ':author_person_display from Stanford::Mods::Record.sw_person_authors' do
+      expect(smods_rec).to receive(:sw_person_authors).and_return(['author 11', 'author 12'])
+      expect(mapper.mods_to_author_fields[:author_person_display]).to eq ['author 11', 'author 12']
+    end
+    it ':author_person_full_display from Stanford::Mods::Record.sw_person_authors' do
+      expect(smods_rec).to receive(:sw_person_authors).and_return(['author 13', 'author 14'])
+      expect(mapper.mods_to_author_fields[:author_person_full_display]).to eq ['author 13', 'author 14']
+    end
+  end
+
+  describe '#mods_to_subject_fields' do
+    let(:mapper) { SwMapper.new('oo000oo0000') }
+    before(:example) do
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
+    end
+    it 'returns a hash' do
+      expect(mapper.mods_to_subject_fields).to be_an_instance_of(Hash)
+    end
+    it ':topic_search from Stanford::Mods::Record.topic_search' do
+      expect(smods_rec).to receive(:topic_search).at_least(1).times.and_return(['topic 1', 'topic 2'])
+      expect(mapper.mods_to_subject_fields[:topic_search]).to eq ['topic 1', 'topic 2']
+    end
+    it ':geographic_search from Stanford::Mods::Record.geographic_search' do
+      expect(smods_rec).to receive(:geographic_search).at_least(1).times.and_return(['geo topic 1', 'geo topic 2'])
+      expect(mapper.mods_to_subject_fields[:geographic_search]).to eq ['geo topic 1', 'geo topic 2']
+    end
+    it ':subject_other_search from Stanford::Mods::Record.subject_other_search' do
+      expect(smods_rec).to receive(:subject_other_search).at_least(1).times.and_return(['other 1', 'other 2'])
+      expect(mapper.mods_to_subject_fields[:subject_other_search]).to eq ['other 1', 'other 2']
+    end
+    it ':subject_other_subvy_search from Stanford::Mods::Record.subject_other_subvy_search' do
+      expect(smods_rec).to receive(:subject_other_subvy_search).at_least(1).times.and_return(['other 3', 'other 4'])
+      expect(mapper.mods_to_subject_fields[:subject_other_subvy_search]).to eq ['other 3', 'other 4']
+    end
+    it ':subject_all_search from Stanford::Mods::Record.subject_all_search' do
+      expect(smods_rec).to receive(:subject_all_search).and_return(['sub 1', 'sub 2'])
+      expect(mapper.mods_to_subject_fields[:subject_all_search]).to eq ['sub 1', 'sub 2']
+    end
+    it ':topic_facet from Stanford::Mods::Record.topic_facet' do
+      expect(smods_rec).to receive(:topic_facet).and_return(['topicf 1', 'topicf 2'])
+      expect(mapper.mods_to_subject_fields[:topic_facet]).to eq ['topicf 1', 'topicf 2']
+    end
+    it ':geographic_facet from Stanford::Mods::Record.geographic_facet' do
+      expect(smods_rec).to receive(:geographic_facet).and_return(['geo 1', 'geo 2'])
+      expect(mapper.mods_to_subject_fields[:geographic_facet]).to eq ['geo 1', 'geo 2']
+    end
+    it ':era_facet from Stanford::Mods::Record.era_facet' do
+      expect(smods_rec).to receive(:era_facet).and_return(['era 1', 'era 2'])
+      expect(mapper.mods_to_subject_fields[:era_facet]).to eq ['era 1', 'era 2']
+    end
+  end
+
   describe '#mods_to_publication_fields' do
     let(:mapper) { SwMapper.new('oo000oo0000') }
     before(:example) do
       allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
+    end
+    it 'returns a hash' do
+      expect(mapper.mods_to_publication_fields).to be_an_instance_of(Hash)
     end
     it ':pub_year_isi from Stanford::Mods::Record.pub_year_int' do
       expect(smods_rec).to receive(:pub_year_int).and_return(1666)
@@ -82,8 +177,8 @@ describe SwMapper do
       expect(mapper.mods_to_publication_fields[:pub_date_display]).to eq '18th century'
     end
     it ':pub_year_tisim' do
-      expect(smods_rec).to receive(:pub_year_int).and_return(666)
-      expect(mapper.mods_to_publication_fields[:pub_year_tisim]).to eq 666
+      expect(smods_rec).to receive(:pub_year_int).and_return('need pub_year_mult impl in stanford-mods')
+      expect(mapper.mods_to_publication_fields[:pub_year_tisim]).to eq 'need pub_year_mult impl in stanford-mods'
     end
     context ':creation_year_isi' do
       it 'year from dateCreated element' do
@@ -113,40 +208,102 @@ describe SwMapper do
       expect(smods_rec).to receive(:pub_date_display).and_return('need imprint_display impl in stanford-mods')
       expect(mapper.mods_to_publication_fields[:imprint_display]).to eq 'need imprint_display impl in stanford-mods'
     end
-
     # :pub_date_sort (deprecated Solr field)
     # :pub_date (deprecated Solr field)
   end
 
-  describe '#date_slider_vals_for_pub_year' do
+  describe '#mods_to_others' do
     let(:mapper) { SwMapper.new('oo000oo0000') }
     before(:example) do
-      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str(coll_created_mods))
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
     end
-    it 'nil if no dates provided' do
-      allow(mapper.modsxml).to receive(:pub_year_int).and_return(nil)
-      expect(mapper.date_slider_vals_for_pub_year).to be nil
+    it 'returns a hash' do
+      expect(mapper.mods_to_others).to be_an_instance_of(Hash)
     end
-    it 'value if there is a pub year' do
-      allow(mapper.modsxml).to receive(:pub_year_int).and_return(2016)
-      expect(mapper.date_slider_vals_for_pub_year).to be 2016
+    it ':format_main_ssim from Stanford::Mods::Record.format_main' do
+      expect(smods_rec).to receive(:format_main).and_return(['format 1', 'format 2'])
+      expect(mapper.mods_to_others[:format_main_ssim]).to eq ['format 1', 'format 2']
     end
-    it 'nil if value is negative' do
-      allow(mapper.modsxml).to receive(:pub_year_int).and_return(-5)
-      expect(mapper.date_slider_vals_for_pub_year).to be nil
+    it ':format from Stanford::Mods::Record.format' do
+      expect(smods_rec).to receive(:format).and_return('format deprecated')
+      expect(mapper.mods_to_others[:format]).to eq 'format deprecated'
+    end
+    it ':language from Stanford::Mods::Record.sw_language_facet' do
+      expect(smods_rec).to receive(:sw_language_facet).and_return(['lang 1', 'lang 2'])
+      expect(mapper.mods_to_others[:language]).to eq ['lang 1', 'lang 2']
+    end
+    it ':physical from Stanford::Mods::Record.term_values([:physical_description, :extent])' do
+      expect(smods_rec).to receive(:term_values).with([:physical_description, :extent]).and_return('extent')
+      allow(smods_rec).to receive(:term_values)
+      expect(mapper.mods_to_others[:physical]).to eq 'extent'
+    end
+    it ':summary_search from Stanford::Mods::Record.term_values(:abstract)' do
+      expect(smods_rec).to receive(:term_values).with(:abstract).and_return('abstract')
+      allow(smods_rec).to receive(:term_values)
+      expect(mapper.mods_to_others[:summary_search]).to eq 'abstract'
+    end
+    it ':toc_search from Stanford::Mods::Record.term_values(:tableOfContents)' do
+      expect(smods_rec).to receive(:term_values).with(:tableOfContents).and_return('tableOfContents')
+      allow(smods_rec).to receive(:term_values)
+      expect(mapper.mods_to_others[:toc_search]).to eq 'tableOfContents'
+    end
+    it ':url_suppl from Stanford::Mods::Record.term_values([:related_item, :location, :url])' do
+      expect(smods_rec).to receive(:term_values).with([:related_item, :location, :url]).and_return(['url suppl 1', 'url suppl 2'])
+      allow(smods_rec).to receive(:term_values)
+      expect(mapper.mods_to_others[:url_suppl]).to eq ['url suppl 1', 'url suppl 2']
     end
   end
 
-  describe 'positive_int?' do
-    let(:mapper) { SwMapper.new('zz999zz9999') }
-    it 'returns true of integer version of string is > 0' do
-      expect(mapper.send(:positive_int?, '250')).to be true
+  describe '#hard_coded_fields' do
+    let(:mapper) { SwMapper.new('oa123ei4567') }
+    before(:example) do
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
     end
-    it 'returns true of integer version of string is = 0' do
-      expect(mapper.send(:positive_int?, '0')).to be true
+    it 'returns a hash' do
+      expect(mapper.hard_coded_fields).to be_an_instance_of(Hash)
     end
-    it 'returns false of integer version of string is < 0' do
-      expect(mapper.send(:positive_int?, '-20')).to be false
+    it ':url_fulltext' do
+      expect(mapper.hard_coded_fields[:url_fulltext]).to eq "https://purl.stanford.edu/oa123ei4567"
+    end
+    it ':access_facet' do
+      expect(mapper.hard_coded_fields[:access_facet]).to eq 'Online'
+    end
+    it 'building_facet' do
+      expect(mapper.hard_coded_fields[:building_facet]).to eq 'Stanford Digital Repository'
+    end
+  end
+
+  context 'pub date slider field support methods' do
+    describe '#date_slider_vals_for_pub_year' do
+      let(:mapper) { SwMapper.new('oo000oo0000') }
+      before(:example) do
+        allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str(coll_created_mods))
+      end
+      it 'nil if no dates provided' do
+        allow(mapper.modsxml).to receive(:pub_year_int).and_return(nil)
+        expect(mapper.send(:date_slider_vals_for_pub_year)).to be nil
+      end
+      it 'value if there is a pub year' do
+        allow(mapper.modsxml).to receive(:pub_year_int).and_return(2016)
+        expect(mapper.send(:date_slider_vals_for_pub_year)).to be 2016
+      end
+      it 'nil if value is negative' do
+        allow(mapper.modsxml).to receive(:pub_year_int).and_return(-5)
+        expect(mapper.send(:date_slider_vals_for_pub_year)).to be nil
+      end
+    end
+
+    describe 'positive_int?' do
+      let(:mapper) { SwMapper.new('zz999zz9999') }
+      it 'returns true of integer version of string is > 0' do
+        expect(mapper.send(:positive_int?, '250')).to be true
+      end
+      it 'returns true of integer version of string is = 0' do
+        expect(mapper.send(:positive_int?, '0')).to be true
+      end
+      it 'returns false of integer version of string is < 0' do
+        expect(mapper.send(:positive_int?, '-20')).to be false
+      end
     end
   end
 

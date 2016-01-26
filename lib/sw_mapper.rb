@@ -13,7 +13,7 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
     solr_doc.update mods_to_title_fields
     solr_doc.update mods_to_author_fields
-    solr_doc.update mods_to_subject_search_fields
+    solr_doc.update mods_to_subject_fields
     solr_doc.update mods_to_publication_fields
     solr_doc.update mods_to_others
     solr_doc.update hard_coded_fields
@@ -30,38 +30,38 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
   # @return [Hash] Hash representing the title fields
   def mods_to_title_fields
-    # title fields
+    short_title = modsxml.sw_short_title
+    full_title = modsxml.sw_full_title
     {
-      title_245a_search: modsxml.sw_short_title,
-      title_245_search: modsxml.sw_full_title,
+      title_245a_search: short_title,
+      title_245_search: full_title,
       title_variant_search: modsxml.sw_addl_titles,
       title_sort: modsxml.sw_sort_title,
-      title_245a_display: modsxml.sw_short_title,
+      title_245a_display: short_title,
       title_display: modsxml.sw_title_display,
-      title_full_display: modsxml.sw_full_title
+      title_full_display: full_title
     }
   end
 
   # @return [Hash] Hash representing the author fields
   def mods_to_author_fields
+    person_authors = modsxml.sw_person_authors
     {
-      # author fields
       author_1xx_search: modsxml.sw_main_author,
       author_7xx_search: modsxml.sw_addl_authors,
-      author_person_facet: modsxml.sw_person_authors,
+      author_person_facet: person_authors,
       author_other_facet: modsxml.sw_impersonal_authors,
       author_sort: modsxml.sw_sort_author,
       author_corp_display: modsxml.sw_corporate_authors,
       author_meeting_display: modsxml.sw_meeting_authors,
-      author_person_display: modsxml.sw_person_authors,
-      author_person_full_display: modsxml.sw_person_authors
+      author_person_display: person_authors,
+      author_person_full_display: person_authors
     }
   end
 
-  # @return [Hash] Hash representing the search fields
-  def mods_to_subject_search_fields
+  # @return [Hash] Hash representing the subjects fields
+  def mods_to_subject_fields
     {
-      # subject search fields
       topic_search: modsxml.topic_search,
       geographic_search: modsxml.geographic_search,
       subject_other_search: modsxml.subject_other_search,
@@ -98,19 +98,11 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     }
   end
 
-  # deprecated:  keeping in case we need to revert to not having negative numbers in date slider
-  #   when removing, also remove positive_int?  methods
-  # @return [Fixnum] Hash representing the pub date
-  def date_slider_vals_for_pub_year
-    sort_year = modsxml.pub_year_int(false)
-    return sort_year if positive_int? sort_year
-  end
-
   # @return [Hash] Hash representing some fields
   def mods_to_others
     {
       format_main_ssim: modsxml.format_main,
-      format: modsxml.format, # for backwards compatibility
+      format: modsxml.format, # deprecated; for backwards compatibility
       language: modsxml.sw_language_facet,
       physical: modsxml.term_values([:physical_description, :extent]),
       summary_search: modsxml.term_values(:abstract),
@@ -128,6 +120,14 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
   end
 
   protected
+
+  # deprecated:  keeping in case we need to revert to not having negative numbers in date slider
+  #   when removing, also remove positive_int?  methods
+  # @return [Fixnum] Hash representing the pub date
+  def date_slider_vals_for_pub_year
+    sort_year = modsxml.pub_year_int(false)
+    return sort_year if positive_int? sort_year
+  end
 
   # @return true if the string parses into an int >= 0
   def positive_int?(str)
