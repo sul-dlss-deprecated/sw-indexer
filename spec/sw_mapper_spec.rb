@@ -264,6 +264,25 @@ describe SwMapper do
     end
   end
 
+  describe '#hard_coded_fields' do
+    let(:mapper) { SwMapper.new('oa123ei4567') }
+    before(:example) do
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
+    end
+    it 'returns a hash' do
+      expect(mapper.hard_coded_fields).to be_an_instance_of(Hash)
+    end
+    it ':url_fulltext' do
+      expect(mapper.hard_coded_fields[:url_fulltext]).to eq "https://purl.stanford.edu/oa123ei4567"
+    end
+    it ':access_facet' do
+      expect(mapper.hard_coded_fields[:access_facet]).to eq 'Online'
+    end
+    it 'building_facet' do
+      expect(mapper.hard_coded_fields[:building_facet]).to eq 'Stanford Digital Repository'
+    end
+  end
+
   describe '#date_slider_vals_for_pub_year' do
     let(:mapper) { SwMapper.new('oo000oo0000') }
     before(:example) do
