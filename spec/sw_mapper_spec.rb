@@ -21,16 +21,6 @@ describe SwMapper do
       expected_doc_hash =
       {
         all_search: ' Item title Personal name Role still image 1909 1915 Collection Title https://purl.stanford.edu/oo000oo0000 Access Condition ',
-        author_1xx_search: nil,
-        author_7xx_search: ['Personal name'],
-        author_corp_display: [],
-        author_meeting_display: [],
-        author_other_facet: [],
-        author_person_display: ['Personal name'],
-        author_person_facet: ['Personal name'],
-        author_person_full_display: ['Personal name'],
-        author_sort: "\u{10FFFF} Item title",
-        era_facet: nil,
         format: ['Image'],
         format_main_ssim: ['Image'],
         geographic_facet: nil,
@@ -96,6 +86,52 @@ describe SwMapper do
     it ':title_full_display from Stanford::Mods::Record.sw_full_title' do
       expect(smods_rec).to receive(:sw_full_title).at_least(1).times.and_return('full title again')
       expect(mapper.mods_to_title_fields[:title_245_search]).to eq 'full title again'
+    end
+  end
+
+  describe '#mods_to_author_fields' do
+    let(:mapper) { SwMapper.new('oo000oo0000') }
+    before(:example) do
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
+    end
+    it 'returns a hash' do
+      expect(mapper.mods_to_author_fields).to be_an_instance_of(Hash)
+    end
+    it ':author_1xx_search from Stanford::Mods::Record.sw_main_author' do
+      expect(smods_rec).to receive(:sw_main_author).and_return('main author')
+      expect(mapper.mods_to_author_fields[:author_1xx_search]).to eq 'main author'
+    end
+    it ':author_7xx_search from Stanford::Mods::Record.sw_addl_authors' do
+      expect(smods_rec).to receive(:sw_addl_authors).and_return(['author 1', 'author 2'])
+      expect(mapper.mods_to_author_fields[:author_7xx_search]).to eq ['author 1', 'author 2']
+    end
+    it ':author_person_facet from Stanford::Mods::Record.sw_person_authors' do
+      expect(smods_rec).to receive(:sw_person_authors).and_return(['author 3', 'author 4'])
+      expect(mapper.mods_to_author_fields[:author_person_facet]).to eq ['author 3', 'author 4']
+    end
+    it ':author_other_facet from Stanford::Mods::Record.sw_impersonal_authors' do
+      expect(smods_rec).to receive(:sw_impersonal_authors).and_return(['author 5', 'author 6'])
+      expect(mapper.mods_to_author_fields[:author_other_facet]).to eq ['author 5', 'author 6']
+    end
+    it ':author_sort from Stanford::Mods::Record.sw_sort_author' do
+      expect(smods_rec).to receive(:sw_sort_author).and_return('sort author')
+      expect(mapper.mods_to_author_fields[:author_sort]).to eq 'sort author'
+    end
+    it ':author_corp_display from Stanford::Mods::Record.sw_corporate_authors' do
+      expect(smods_rec).to receive(:sw_corporate_authors).and_return('main author')
+      expect(mapper.mods_to_author_fields[:author_corp_display]).to eq 'main author'
+    end
+    it ':author_meeting_display from Stanford::Mods::Record.sw_meeting_authors' do
+      expect(smods_rec).to receive(:sw_meeting_authors).and_return(['author 9', 'author 10'])
+      expect(mapper.mods_to_author_fields[:author_meeting_display]).to eq ['author 9', 'author 10']
+    end
+    it ':author_person_display from Stanford::Mods::Record.sw_person_authors' do
+      expect(smods_rec).to receive(:sw_person_authors).and_return(['author 11', 'author 12'])
+      expect(mapper.mods_to_author_fields[:author_person_display]).to eq ['author 11', 'author 12']
+    end
+    it ':author_person_full_display from Stanford::Mods::Record.sw_person_authors' do
+      expect(smods_rec).to receive(:sw_person_authors).and_return(['author 13', 'author 14'])
+      expect(mapper.mods_to_author_fields[:author_person_full_display]).to eq ['author 13', 'author 14']
     end
   end
 

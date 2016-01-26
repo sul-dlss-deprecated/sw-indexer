@@ -13,7 +13,7 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
     solr_doc.update mods_to_title_fields
     solr_doc.update mods_to_author_fields
-    solr_doc.update mods_to_subject_search_fields
+    solr_doc.update mods_to_subject_fields
     solr_doc.update mods_to_publication_fields
     solr_doc.update mods_to_others
     solr_doc.update hard_coded_fields
@@ -45,22 +45,22 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
   # @return [Hash] Hash representing the author fields
   def mods_to_author_fields
+    person_authors = modsxml.sw_person_authors
     {
-      # author fields
       author_1xx_search: modsxml.sw_main_author,
       author_7xx_search: modsxml.sw_addl_authors,
-      author_person_facet: modsxml.sw_person_authors,
+      author_person_facet: person_authors,
       author_other_facet: modsxml.sw_impersonal_authors,
       author_sort: modsxml.sw_sort_author,
       author_corp_display: modsxml.sw_corporate_authors,
       author_meeting_display: modsxml.sw_meeting_authors,
-      author_person_display: modsxml.sw_person_authors,
-      author_person_full_display: modsxml.sw_person_authors
+      author_person_display: person_authors,
+      author_person_full_display: person_authors
     }
   end
 
   # @return [Hash] Hash representing the subjects fields
-  def mods_to_subject_search_fields
+  def mods_to_subject_fields
     {
       # subject search fields
       topic_search: modsxml.topic_search,
