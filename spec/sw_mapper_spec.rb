@@ -73,6 +73,9 @@ describe SwMapper do
     before(:example) do
       allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
     end
+    it 'returns a hash' do
+      expect(mapper.mods_to_publication_fields).to be_an_instance_of(Hash)
+    end
     it ':pub_year_isi from Stanford::Mods::Record.pub_year_int' do
       expect(smods_rec).to receive(:pub_year_int).and_return(1666)
       expect(mapper.mods_to_publication_fields[:pub_year_isi]).to eq 1666
@@ -82,8 +85,8 @@ describe SwMapper do
       expect(mapper.mods_to_publication_fields[:pub_date_display]).to eq '18th century'
     end
     it ':pub_year_tisim' do
-      expect(smods_rec).to receive(:pub_year_int).and_return(666)
-      expect(mapper.mods_to_publication_fields[:pub_year_tisim]).to eq 666
+      expect(smods_rec).to receive(:pub_year_int).and_return('need pub_year_mult impl in stanford-mods')
+      expect(mapper.mods_to_publication_fields[:pub_year_tisim]).to eq 'need pub_year_mult impl in stanford-mods'
     end
     context ':creation_year_isi' do
       it 'year from dateCreated element' do
@@ -113,7 +116,6 @@ describe SwMapper do
       expect(smods_rec).to receive(:pub_date_display).and_return('need imprint_display impl in stanford-mods')
       expect(mapper.mods_to_publication_fields[:imprint_display]).to eq 'need imprint_display impl in stanford-mods'
     end
-
     # :pub_date_sort (deprecated Solr field)
     # :pub_date (deprecated Solr field)
   end
