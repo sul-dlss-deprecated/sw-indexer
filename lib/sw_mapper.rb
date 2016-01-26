@@ -102,7 +102,7 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
   def mods_to_others
     {
       format_main_ssim: modsxml.format_main,
-      format: modsxml.format, # for backwards compatibility
+      format: modsxml.format, # deprecated; for backwards compatibility
       language: modsxml.sw_language_facet,
       physical: modsxml.term_values([:physical_description, :extent]),
       summary_search: modsxml.term_values(:abstract),

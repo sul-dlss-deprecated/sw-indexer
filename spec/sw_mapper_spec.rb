@@ -222,6 +222,48 @@ describe SwMapper do
     # :pub_date (deprecated Solr field)
   end
 
+  describe '#mods_to_others' do
+    let(:mapper) { SwMapper.new('oo000oo0000') }
+    before(:example) do
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
+    end
+    it 'returns a hash' do
+      expect(mapper.mods_to_others).to be_an_instance_of(Hash)
+    end
+    it ':format_main_ssim from Stanford::Mods::Record.format_main' do
+      expect(smods_rec).to receive(:format_main).and_return(['format 1', 'format 2'])
+      expect(mapper.mods_to_others[:format_main_ssim]).to eq ['format 1', 'format 2']
+    end
+    it ':format from Stanford::Mods::Record.format' do
+      expect(smods_rec).to receive(:format).and_return('format deprecated')
+      expect(mapper.mods_to_others[:format]).to eq 'format deprecated'
+    end
+    it ':language from Stanford::Mods::Record.sw_language_facet' do
+      expect(smods_rec).to receive(:sw_language_facet).and_return(['lang 1', 'lang 2'])
+      expect(mapper.mods_to_others[:language]).to eq ['lang 1', 'lang 2']
+    end
+    it ':physical from Stanford::Mods::Record.term_values([:physical_description, :extent])' do
+      expect(smods_rec).to receive(:term_values).with([:physical_description, :extent]).and_return('extent')
+      allow(smods_rec).to receive(:term_values)
+      expect(mapper.mods_to_others[:physical]).to eq 'extent'
+    end
+    it ':summary_search from Stanford::Mods::Record.term_values(:abstract)' do
+      expect(smods_rec).to receive(:term_values).with(:abstract).and_return('abstract')
+      allow(smods_rec).to receive(:term_values)
+      expect(mapper.mods_to_others[:summary_search]).to eq 'abstract'
+    end
+    it ':toc_search from Stanford::Mods::Record.term_values(:tableOfContents)' do
+      expect(smods_rec).to receive(:term_values).with(:tableOfContents).and_return('tableOfContents')
+      allow(smods_rec).to receive(:term_values)
+      expect(mapper.mods_to_others[:toc_search]).to eq 'tableOfContents'
+    end
+    it ':url_suppl from Stanford::Mods::Record.term_values([:related_item, :location, :url])' do
+      expect(smods_rec).to receive(:term_values).with([:related_item, :location, :url]).and_return(['url suppl 1', 'url suppl 2'])
+      allow(smods_rec).to receive(:term_values)
+      expect(mapper.mods_to_others[:url_suppl]).to eq ['url suppl 1', 'url suppl 2']
+    end
+  end
+
   describe '#date_slider_vals_for_pub_year' do
     let(:mapper) { SwMapper.new('oo000oo0000') }
     before(:example) do
