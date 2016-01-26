@@ -62,7 +62,6 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
   # @return [Hash] Hash representing the subjects fields
   def mods_to_subject_fields
     {
-      # subject search fields
       topic_search: modsxml.topic_search,
       geographic_search: modsxml.geographic_search,
       subject_other_search: modsxml.subject_other_search,

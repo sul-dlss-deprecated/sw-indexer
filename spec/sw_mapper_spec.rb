@@ -23,18 +23,11 @@ describe SwMapper do
         all_search: ' Item title Personal name Role still image 1909 1915 Collection Title https://purl.stanford.edu/oo000oo0000 Access Condition ',
         format: ['Image'],
         format_main_ssim: ['Image'],
-        geographic_facet: nil,
-        geographic_search: nil,
         id: 'zz999zz9999',
         language: [],
         physical: nil,
-        subject_all_search: nil,
-        subject_other_search: nil,
-        subject_other_subvy_search: nil,
         summary_search: nil,
         toc_search: nil,
-        topic_facet: nil,
-        topic_search: nil,
         url_suppl: nil,
         display_type: 'image',
         access_facet: 'Online',
@@ -132,6 +125,48 @@ describe SwMapper do
     it ':author_person_full_display from Stanford::Mods::Record.sw_person_authors' do
       expect(smods_rec).to receive(:sw_person_authors).and_return(['author 13', 'author 14'])
       expect(mapper.mods_to_author_fields[:author_person_full_display]).to eq ['author 13', 'author 14']
+    end
+  end
+
+  describe '#mods_to_subject_fields' do
+    let(:mapper) { SwMapper.new('oo000oo0000') }
+    before(:example) do
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
+    end
+    it 'returns a hash' do
+      expect(mapper.mods_to_subject_fields).to be_an_instance_of(Hash)
+    end
+    it ':topic_search from Stanford::Mods::Record.topic_search' do
+      expect(smods_rec).to receive(:topic_search).at_least(1).times.and_return(['topic 1', 'topic 2'])
+      expect(mapper.mods_to_subject_fields[:topic_search]).to eq ['topic 1', 'topic 2']
+    end
+    it ':geographic_search from Stanford::Mods::Record.geographic_search' do
+      expect(smods_rec).to receive(:geographic_search).at_least(1).times.and_return(['geo topic 1', 'geo topic 2'])
+      expect(mapper.mods_to_subject_fields[:geographic_search]).to eq ['geo topic 1', 'geo topic 2']
+    end
+    it ':subject_other_search from Stanford::Mods::Record.subject_other_search' do
+      expect(smods_rec).to receive(:subject_other_search).at_least(1).times.and_return(['other 1', 'other 2'])
+      expect(mapper.mods_to_subject_fields[:subject_other_search]).to eq ['other 1', 'other 2']
+    end
+    it ':subject_other_subvy_search from Stanford::Mods::Record.subject_other_subvy_search' do
+      expect(smods_rec).to receive(:subject_other_subvy_search).at_least(1).times.and_return(['other 3', 'other 4'])
+      expect(mapper.mods_to_subject_fields[:subject_other_subvy_search]).to eq ['other 3', 'other 4']
+    end
+    it ':subject_all_search from Stanford::Mods::Record.subject_all_search' do
+      expect(smods_rec).to receive(:subject_all_search).and_return(['sub 1', 'sub 2'])
+      expect(mapper.mods_to_subject_fields[:subject_all_search]).to eq ['sub 1', 'sub 2']
+    end
+    it ':topic_facet from Stanford::Mods::Record.topic_facet' do
+      expect(smods_rec).to receive(:topic_facet).and_return(['topicf 1', 'topicf 2'])
+      expect(mapper.mods_to_subject_fields[:topic_facet]).to eq ['topicf 1', 'topicf 2']
+    end
+    it ':geographic_facet from Stanford::Mods::Record.geographic_facet' do
+      expect(smods_rec).to receive(:geographic_facet).and_return(['geo 1', 'geo 2'])
+      expect(mapper.mods_to_subject_fields[:geographic_facet]).to eq ['geo 1', 'geo 2']
+    end
+    it ':era_facet from Stanford::Mods::Record.era_facet' do
+      expect(smods_rec).to receive(:era_facet).and_return(['era 1', 'era 2'])
+      expect(mapper.mods_to_subject_fields[:era_facet]).to eq ['era 1', 'era 2']
     end
   end
 
