@@ -98,14 +98,6 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     }
   end
 
-  # deprecated:  keeping in case we need to revert to not having negative numbers in date slider
-  #   when removing, also remove positive_int?  methods
-  # @return [Fixnum] Hash representing the pub date
-  def date_slider_vals_for_pub_year
-    sort_year = modsxml.pub_year_int(false)
-    return sort_year if positive_int? sort_year
-  end
-
   # @return [Hash] Hash representing some fields
   def mods_to_others
     {
@@ -128,6 +120,14 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
   end
 
   protected
+
+  # deprecated:  keeping in case we need to revert to not having negative numbers in date slider
+  #   when removing, also remove positive_int?  methods
+  # @return [Fixnum] Hash representing the pub date
+  def date_slider_vals_for_pub_year
+    sort_year = modsxml.pub_year_int(false)
+    return sort_year if positive_int? sort_year
+  end
 
   # @return true if the string parses into an int >= 0
   def positive_int?(str)

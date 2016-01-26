@@ -127,15 +127,15 @@ describe SwMapper do
     end
     it 'nil if no dates provided' do
       allow(mapper.modsxml).to receive(:pub_year_int).and_return(nil)
-      expect(mapper.date_slider_vals_for_pub_year).to be nil
+      expect(mapper.send(:date_slider_vals_for_pub_year)).to be nil
     end
     it 'value if there is a pub year' do
       allow(mapper.modsxml).to receive(:pub_year_int).and_return(2016)
-      expect(mapper.date_slider_vals_for_pub_year).to be 2016
+      expect(mapper.send(:date_slider_vals_for_pub_year)).to be 2016
     end
     it 'nil if value is negative' do
       allow(mapper.modsxml).to receive(:pub_year_int).and_return(-5)
-      expect(mapper.date_slider_vals_for_pub_year).to be nil
+      expect(mapper.send(:date_slider_vals_for_pub_year)).to be nil
     end
   end
 
