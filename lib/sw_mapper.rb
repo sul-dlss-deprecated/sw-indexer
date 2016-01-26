@@ -15,7 +15,6 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     solr_doc.update mods_to_author_fields
     solr_doc.update mods_to_subject_search_fields
     solr_doc.update mods_to_publication_fields
-    solr_doc.update mods_to_pub_date
     solr_doc.update mods_to_others
     solr_doc.update hard_coded_fields
 
@@ -76,27 +75,35 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
   # @return [Hash] Hash representing the publication fields
   def mods_to_publication_fields
+    pub_year_int = modsxml.pub_year_int(false)
     {
-      # publication fields
+      # TODO: need better implementation of pub_search in stanford-mods
       pub_search: modsxml.place,
+      pub_year_isi: pub_year_int, # for sorting
+      # deprecated pub_date_sort - use pub_year_isi; pub_date_sort is a string and requires weirdness for bc dates
       pub_date_sort: modsxml.pub_date_sort,
+      # TODO: need better implementation of imprint_display in stanford-mods
       imprint_display: modsxml.pub_date_display,
+
+      # deprecated pub_date Solr field - use pub_year_isi for sort key; pub_date_display for display field
       pub_date: modsxml.pub_date_facet,
-      # pub_date_display may be deprecated
-      pub_date_display: modsxml.pub_date_display
+      # TODO: need better stanford-mods implementation of early years (add A.D.) and vague years (1950s)
+      pub_date_display: modsxml.pub_date_facet_single_value,
+
+      # TODO: need better implementation for date slider in stanford-mods (e.g. multiple years when warranted)
+      pub_year_tisim: pub_year_int,
+
+      creation_year_isi: modsxml.year_int(modsxml.date_created_elements(false)),
+      publication_year_isi: modsxml.year_int(modsxml.date_issued_elements(false))
     }
   end
 
-  # @return [Hash] Hash representing the pub date
-  def mods_to_pub_date
-    doc_hash = {}
-    if positive_int? modsxml.pub_date_sort
-      # for date slider
-      doc_hash[:pub_year_tisim] = modsxml.pub_date_sort
-      # put the displayable year in the correct field
-      doc_hash[date_type_sym] = modsxml.pub_date_sort if date_type_sym
-    end
-    doc_hash
+  # deprecated:  keeping in case we need to revert to not having negative numbers in date slider
+  #   when removing, also remove positive_int?  methods
+  # @return [Fixnum] Hash representing the pub date
+  def date_slider_vals_for_pub_year
+    sort_year = modsxml.pub_year_int(false)
+    return sort_year if positive_int? sort_year
   end
 
   # @return [Hash] Hash representing some fields
@@ -122,21 +129,11 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
   protected
 
-  # @return true if the string parses into an int that is >= 0
-  # @return false if the string parses into an int that is < 0
+  # @return true if the string parses into an int >= 0
   def positive_int?(str)
-    return true if str.to_i >= 0
+    str.to_i >= 0
+  rescue
     false
-  end
-
-  # determines particular flavor of displayable publication year field
-  # @return Solr field name as a symbol
-  def date_type_sym
-    vals = modsxml.term_values([:origin_info, :dateIssued])
-    return :publication_year_isi if vals && vals.length > 0
-    vals = modsxml.term_values([:origin_info, :dateCreated])
-    return :creation_year_isi if vals && vals.length > 0
-    nil
   end
 
   # value is used to tell SearchWorks UI app of specific display needs for objects
