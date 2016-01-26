@@ -1,0 +1,20 @@
+inherit_from: .rubocop_todo.yml
+
+require: rubocop-rspec
+
+AllCops:
+  Exclude:
+    - '.internal_test_app/**/*'
+    - 'bin/**/*'
+    - 'db/**/*'
+    - 'vendor/**/*'
+
+Rails:
+  Enabled: true
+
+Metrics/LineLength:
+  Max: 120
+
+# shut hound up re: quote styles
+Style/StringLiterals:
+  Enabled: false
