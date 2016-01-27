@@ -168,13 +168,21 @@ describe SwMapper do
     it 'returns a hash' do
       expect(mapper.mods_to_publication_fields).to be_an_instance_of(Hash)
     end
+    it ':pub_date_sort (deprecated) from Stanford::Mods::record.pub_year_sort_str' do
+      expect(smods_rec).to receive(:pub_year_sort_str).and_return('1777')
+      expect(mapper.mods_to_publication_fields[:pub_date_sort]).to eq '1777'
+    end
     it ':pub_year_isi from Stanford::Mods::Record.pub_year_int' do
       expect(smods_rec).to receive(:pub_year_int).and_return(1666)
       expect(mapper.mods_to_publication_fields[:pub_year_isi]).to eq 1666
     end
-    it ':pub_date_display from Stanford::Mods::Record.pub_date_facet_single_value' do
+    it ':pub_date (deprecated) from Stanford::Mods::Record.pub_date_facet_single_value' do
+      expect(smods_rec).to receive(:pub_date_facet_single_value).and_return('6 B.C.')
+      expect(mapper.mods_to_publication_fields[:pub_date]).to eq '6 B.C.'
+    end
+    it ':pub_year_ss from Stanford::Mods::Record.pub_date_facet_single_value' do
       expect(smods_rec).to receive(:pub_date_facet_single_value).and_return('18th century')
-      expect(mapper.mods_to_publication_fields[:pub_date_display]).to eq '18th century'
+      expect(mapper.mods_to_publication_fields[:pub_year_ss]).to eq '18th century'
     end
     it ':pub_year_tisim' do
       expect(smods_rec).to receive(:pub_year_int).and_return('need pub_year_mult impl in stanford-mods')
@@ -208,8 +216,6 @@ describe SwMapper do
       expect(smods_rec).to receive(:pub_date_display).and_return('need imprint_display impl in stanford-mods')
       expect(mapper.mods_to_publication_fields[:imprint_display]).to eq 'need imprint_display impl in stanford-mods'
     end
-    # :pub_date_sort (deprecated Solr field)
-    # :pub_date (deprecated Solr field)
   end
 
   describe '#mods_to_others' do
