@@ -75,26 +75,29 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
   # @return [Hash] Hash representing the publication fields
   def mods_to_publication_fields
-    pub_year_int = modsxml.pub_year_int(false)
+    pub_year_int = modsxml.pub_year_int
+    pub_year_for_display = modsxml.pub_date_facet_single_value
     {
       # TODO: need better implementation of pub_search in stanford-mods
       pub_search: modsxml.place,
       pub_year_isi: pub_year_int, # for sorting
       # deprecated pub_date_sort - use pub_year_isi; pub_date_sort is a string and requires weirdness for bc dates
-      pub_date_sort: modsxml.pub_date_sort,
+      #   can remove after pub_year_isi is populated for all indexing data (i.e. solrmarc, crez) and app code is changed
+      pub_date_sort: modsxml.pub_year_sort_str,
       # TODO: need better implementation of imprint_display in stanford-mods
       imprint_display: modsxml.pub_date_display,
 
-      # deprecated pub_date Solr field - use pub_year_isi for sort key; pub_date_display for display field
-      pub_date: modsxml.pub_date_facet,
+      # deprecated pub_date Solr field - use pub_year_isi for sort key; pub_year_ss for display field
+      #   can remove after other fields are populated for all indexing data (i.e. solrmarc, crez) and app code is changed
+      pub_date: pub_year_for_display,
       # TODO: need better stanford-mods implementation of early years (add A.D.) and vague years (1950s)
-      pub_date_display: modsxml.pub_date_facet_single_value,
+      pub_year_ss: pub_year_for_display,
 
       # TODO: need better implementation for date slider in stanford-mods (e.g. multiple years when warranted)
       pub_year_tisim: pub_year_int,
 
-      creation_year_isi: modsxml.year_int(modsxml.date_created_elements(false)),
-      publication_year_isi: modsxml.year_int(modsxml.date_issued_elements(false))
+      creation_year_isi: modsxml.year_int(modsxml.date_created_elements),
+      publication_year_isi: modsxml.year_int(modsxml.date_issued_elements)
     }
   end
 
