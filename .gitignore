@@ -8,7 +8,6 @@
 /.bundle
 config/solr.yml
 coverage/*
-config/deploy/*
 
 .rake_tasks*
 # Ignore the default SQLite database.
