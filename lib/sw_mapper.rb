@@ -169,7 +169,9 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
   def file_ids
     return if purlxml.is_collection
     return purlxml.image_ids if %w(image book).include?(display_type)
-    return purlxml.file_ids if display_type == 'file'
+    # https://github.com/sul-dlss/sw-indexer-service/issues/34
+    # Only return file_ids for images, not for non-image types
+    # return purlxml.file_ids if display_type == 'file'
   end
 
   # the collection druid for items in a collection
