@@ -8,10 +8,13 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
   #
   # @raise it will raise errors if any problems happen in any level
   def index(druid, targets = nil)
+
+    targets ||= {}
+
     # If a catkey exists in the purl_model, stop processing the druid and leave
     # the method because access to the digital object will be provided by an 856
     # in the corresponding MARC record
-    return if @purl_model.catkey.present?
+    return if purl_model(druid).catkey.present?
 
     # Create the solr document for indexing using the Searchworks mapper and the
     # mods, purl, and collection information
@@ -20,5 +23,9 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
     # Get SOLR configuration and write solr docs to the appropriate targets
     solr_targets_configs = BaseIndexer.solr_configuration_class_name.constantize.instance.get_configuration_hash
     BaseIndexer.solr_writer_class_name.constantize.new.process(druid, solr_doc, targets, solr_targets_configs)
+  end
+
+  def purl_model(druid)
+    DiscoveryIndexer::InputXml::Purlxml.new(druid).load
   end
 end
