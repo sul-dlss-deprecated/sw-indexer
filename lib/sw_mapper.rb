@@ -76,7 +76,7 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
   # @return [Hash] Hash representing the publication fields
   def mods_to_publication_fields
     pub_year_int = modsxml.pub_year_int
-    pub_year_for_display = modsxml.pub_date_facet_single_value
+    pub_year_for_display = modsxml.pub_year_display_str
     {
       # TODO: need better implementation of pub_search in stanford-mods
       pub_search: modsxml.place,
@@ -90,7 +90,6 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
       # deprecated pub_date Solr field - use pub_year_isi for sort key; pub_year_ss for display field
       #   can remove after other fields are populated for all indexing data (i.e. solrmarc, crez) and app code is changed
       pub_date: pub_year_for_display,
-      # TODO: need better stanford-mods implementation of early years (add A.D.) and vague years (1950s)
       pub_year_ss: pub_year_for_display,
 
       # TODO: need better implementation for date slider in stanford-mods (e.g. multiple years when warranted)
