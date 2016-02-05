@@ -177,11 +177,11 @@ describe SwMapper do
       expect(mapper.mods_to_publication_fields[:pub_year_isi]).to eq 1666
     end
     it ':pub_date (deprecated) from Stanford::Mods::Record.pub_date_facet_single_value' do
-      expect(smods_rec).to receive(:pub_date_facet_single_value).and_return('6 B.C.')
+      expect(smods_rec).to receive(:pub_year_display_str).and_return('6 B.C.')
       expect(mapper.mods_to_publication_fields[:pub_date]).to eq '6 B.C.'
     end
-    it ':pub_year_ss from Stanford::Mods::Record.pub_date_facet_single_value' do
-      expect(smods_rec).to receive(:pub_date_facet_single_value).and_return('18th century')
+    it ':pub_year_ss from Stanford::Mods::Record.pub_year_display_str' do
+      expect(smods_rec).to receive(:pub_year_display_str).and_return('18th century')
       expect(mapper.mods_to_publication_fields[:pub_year_ss]).to eq '18th century'
     end
     it ':pub_year_tisim' do

@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'base_indexer', '>= 0.5.0'
 gem 'discovery-indexer'
 gem 'dor-fetcher', '>= 1.1.1'
-gem 'stanford-mods', '>= 1.4.0' # get new pub date methods
+gem 'stanford-mods', '>= 1.5.3' # pub_year_display_str method
 
 gem 'rails', '4.2.5.1'
 gem 'responders', '~> 2.0'
