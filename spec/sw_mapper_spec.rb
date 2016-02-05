@@ -8,8 +8,9 @@ describe SwMapper do
   let(:coll_pid) { 'druid:oo000oo0000' }
   let(:coll_purl_xml) { "<publicObject id='druid:oo000oo0000'></publicObject>" }
 
-  describe 'convert_to_solr_doc' do
-    it 'should properly map a digital object for SearchWorks' do
+  describe '#convert_to_solr_doc' do
+    it 'correctly maps MODS digital object to Solr doc hash' do
+      skip("test broken: it always passes regardless of what is in doc hash")
       allow(DiscoveryIndexer::InputXml::PurlxmlParserStrict).to receive(:new).with(item_pid, item_image_xml).and_return(item_purl_xml)
       allow(DiscoveryIndexer::InputXml::Modsxml).to receive(:new).with(item_pid).and_return(item_image_mods)
       mapper = SwMapper.new('zz999zz9999')
@@ -315,41 +316,54 @@ describe SwMapper do
 
   describe 'display_type' do
     it 'is the display_type from the identityMetadata if it exists' do
+      skip("need to write test")
     end
     context 'is based upon the content type if no display_type' do
       it 'is book when content type is book' do
+        skip("need to write test")
       end
       it 'is image when the content type is image, manuscript or map' do
+        skip("need to write test")
       end
       it 'is file when content type is not book, image, manuscript, or map' do
+        skip("need to write test")
       end
     end
   end
 
   describe 'file_ids' do
     it 'includes image_ids if display_type is image' do
+      skip("need to write test")
     end
     it 'includes file_ids if display_type is file' do
+      skip("need to write test")
     end
     it 'is nil if it is a collection' do
+      skip("need to write test")
     end
   end
 
   describe 'collection' do
     it 'includes collection druid if no ckey is present' do
+      skip("need to write test")
     end
     it 'includes collection ckey if ckey is present' do
+      skip("need to write test")
     end
     it 'is an empty array if no collection data is available' do
+      skip("need to write test")
     end
   end
 
   describe 'collection_with_title' do
     it 'includes collection druid with collection title if no ckey is present' do
+      skip("need to write test")
     end
     it 'includes collection ckey with collection title if ckey is present' do
+      skip("need to write test")
     end
     it 'is an empty array if no collection data available' do
+      skip("need to write test")
     end
   end
 end
