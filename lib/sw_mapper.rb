@@ -106,6 +106,7 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     {
       format_main_ssim: modsxml.format_main,
       format: modsxml.format, # deprecated; for backwards compatibility
+      genre_ssim: modsxml.sw_genre,
       language: modsxml.sw_language_facet,
       physical: modsxml.term_values([:physical_description, :extent]),
       summary_search: modsxml.term_values(:abstract),

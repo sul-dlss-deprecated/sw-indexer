@@ -258,6 +258,10 @@ describe SwMapper do
       allow(smods_rec).to receive(:term_values)
       expect(mapper.mods_to_others[:url_suppl]).to eq ['url suppl 1', 'url suppl 2']
     end
+    it ':genre_ssim from Stanford::Mods::Record.sw_genre' do
+      expect(smods_rec).to receive(:sw_genre).and_return(['genre 1', 'genre 2'])
+      expect(mapper.mods_to_others[:genre_ssim]).to eq ['genre 1', 'genre 2']
+    end
   end
 
   describe '#hard_coded_fields' do
