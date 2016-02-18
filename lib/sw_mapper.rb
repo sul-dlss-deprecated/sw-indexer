@@ -18,11 +18,11 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     solr_doc.update mods_to_others
     solr_doc.update hard_coded_fields
 
-    solr_doc[:collection] = collection
     solr_doc[:modsxml] = modsxml.to_xml
     solr_doc[:all_search] = modsxml.text.gsub(/\s+/, ' ')
     solr_doc[:display_type] = display_type
     solr_doc[:file_id] = file_ids
+    solr_doc[:collection] = collection_ids
     solr_doc[:collection_with_title] = collection_with_title
     solr_doc[:collection_type] = 'Digital Collection' if purlxml.is_collection
     solr_doc
@@ -172,15 +172,14 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     return purlxml.file_ids if display_type == 'file'
   end
 
-  # the collection druid for items in a collection
-  # @return [Array<String>] druids
-  def collection
+  # the ids of objects of which this object is a collection member
+  # @return [Array<String>] druids or ckeys of collection objects
+  def collection_ids
     collection_data.map(&:searchworks_id)
   end
 
-  # The collection druid or ckey and collection title for items
-  # in a collection for display in SearchWorks
-  # @return [Array<String>] druid -|- title or ckey -|- title
+  # The object ids concat with '-|-' then with object title for the objects of which THIS object is a collection member
+  # @return [Array<String>] id-|-title of collection objects
   def collection_with_title
     collection_data.map do |collection|
       "#{collection.searchworks_id}-|-#{collection.title}"

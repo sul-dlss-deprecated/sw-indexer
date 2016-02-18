@@ -304,7 +304,7 @@ describe SwMapper do
       end
     end
 
-    describe 'positive_int?' do
+    describe '#positive_int?' do
       let(:mapper) { SwMapper.new('zz999zz9999') }
       it 'returns true of integer version of string is > 0' do
         expect(mapper.send(:positive_int?, '250')).to be true
@@ -335,7 +335,7 @@ describe SwMapper do
     end
   end
 
-  describe 'file_ids' do
+  describe '#file_ids' do
     it 'includes image_ids if display_type is image' do
       skip("need to write test")
     end
@@ -347,15 +347,34 @@ describe SwMapper do
     end
   end
 
-  describe 'collection' do
-    it 'includes collection druid if no ckey is present' do
-      skip("need to write test")
+  describe 'collection data support methods' do
+    let(:fake_druid) { 'oo000oo0000' }
+    let(:mapper) { described_class.new(fake_druid) }
+    let(:coll_data1) { double('discovery-indexer-collection1', searchworks_id: 'coll1_id', title: 'coll1_title') }
+    let(:coll_data2) { double('discovery-indexer-collection2', searchworks_id: 'coll2_id', title: 'coll2_title') }
+    describe '#collection_ids' do
+      it 'gets them from DiscoveryIndexer::GeneralMapper.collection_data.searchworks_id' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:collection_data).and_return([coll_data1, coll_data2])
+        expect(mapper.send(:collection_ids)).to eq ['coll1_id', 'coll2_id']
+      end
+      it 'is an empty array if no collection data is available' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:collection_data).and_return([])
+        expect(mapper.send(:collection_ids)).to eq []
+      end
     end
-    it 'includes collection ckey if ckey is present' do
-      skip("need to write test")
-    end
-    it 'is an empty array if no collection data is available' do
-      skip("need to write test")
+    describe '#collection_with_title' do
+      it 'returns Array of coll_id-|-coll_title from DiscoveryIndexer::GeneralMapper.collection_data' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:collection_data).and_return([coll_data1, coll_data2])
+        expect(mapper.send(:collection_with_title)).to eq ['coll1_id-|-coll1_title', 'coll2_id-|-coll2_title']
+      end
+      it 'is an empty array if no collection data is available' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:collection_data).and_return([])
+        expect(mapper.send(:collection_with_title)).to eq []
+      end
     end
   end
 
