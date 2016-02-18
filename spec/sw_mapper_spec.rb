@@ -282,6 +282,14 @@ describe SwMapper do
       expect(mapper).to receive(:collection_with_title).and_return(['coll_id1-|-coll_title1', 'coll_id2-|-coll_title2'])
       expect(mapper.public_xml_to_fields[:collection_with_title]).to eq ['coll_id1-|-coll_title1', 'coll_id2-|-coll_title2']
     end
+    it ':set from #constituent_ids' do
+      expect(mapper).to receive(:constituent_ids).and_return(['stit_id1', 'stit_id2'])
+      expect(mapper.public_xml_to_fields[:set]).to eq ['stit_id1', 'stit_id2']
+    end
+    it ':set_with_title from #constituent_with_title' do
+      expect(mapper).to receive(:constituent_with_title).and_return(['stit_id1-|-stit_title1', 'stit_id2-|-stit_title2'])
+      expect(mapper.public_xml_to_fields[:set_with_title]).to eq ['stit_id1-|-stit_title1', 'stit_id2-|-stit_title2']
+    end
   end
 
   describe '#hard_coded_fields' do

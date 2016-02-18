@@ -2,8 +2,10 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
   # You have access to these instance variables:
   # druid = object pid (no "druid:" prefix)
   # modsxml == Stanford::Mods::Record class object (modsxml.mods_ng_xml == Nokogiri document (for custom parsing)
-  # @purlxml == DiscoveryIndexer::InputXml::PurlxmlModel class object (@purlxml.public_xml == Nokogiri document (for custom parsing)
-  # @collection_data == hash of collections the druid belongs to {'oo000oo0000'=>{label: "Collection Name", catkey: "12345678"}}
+  # purlxml == DiscoveryIndexer::InputXml::PurlxmlModel class object (@purlxml.public_xml == Nokogiri document (for custom parsing)
+  # collection_data == Array of DiscoveryIndexer::Collections
+  # constituent_data == Array of DiscoveryIndexer::Collections
+
   # Create a Hash representing a Solr doc, with all MODS related fields populated.
   # @return [Hash] Hash representing the Solr document
   def convert_to_solr_doc
@@ -124,7 +126,9 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
       display_type: display_type,
       file_id: file_ids,
       collection: collection_ids,
-      collection_with_title: collection_with_title
+      collection_with_title: collection_with_title,
+      set: constituent_ids,
+      set_with_title: constituent_with_title
     }
   end
 
