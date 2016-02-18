@@ -15,19 +15,11 @@ describe SwMapper do
       allow(DiscoveryIndexer::InputXml::Modsxml).to receive(:new).with(item_pid).and_return(item_image_mods)
       mapper = SwMapper.new('zz999zz9999')
       allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str(item_image_mods))
-      allow(mapper).to receive(:collection).and_return('oo000oo0000')
-      allow(mapper).to receive(:display_type).and_return('image')
-      allow(mapper).to receive(:file_ids).and_return('a24.jp2')
-      allow(mapper).to receive(:collection_with_title).and_return('oo000oo0000-|-Collection Title')
       expected_doc_hash =
       {
         all_search: ' Item title Personal name Role still image 1909 1915 Collection Title https://purl.stanford.edu/oo000oo0000 Access Condition ',
         id: 'zz999zz9999',
-        display_type: 'image',
         druid: 'zz999zz9999',
-        file_id: ['a24.jp2', 'a25.jp2', 'a26.jp2', 'a27.jp2', 'a28.jp2'],
-        collection: ['aa000bb1111'],
-        collection_with_title: ['aa000bb1111-|-Collection Name'],
         modsxml: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<mods xmlns=\"http://www.loc.gov/mods/v3\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" version=\"3.3\" xsi:schemaLocation=\"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd\">\n      <titleInfo>\n        <title>Item title</title>\n      </titleInfo>\n      <name type=\"personal\">\n        <namePart>Personal name</namePart>\n        <role>\n          <roleTerm authority=\"marcrelator\" type=\"text\">Role</roleTerm>\n        </role>\n      </name>\n      <typeOfResource>still image</typeOfResource>\n      <originInfo>\n        <dateCreated point=\"start\" keyDate=\"yes\">1909</dateCreated>\n        <dateCreated point=\"end\">1915</dateCreated>\n      </originInfo>\n      <relatedItem type=\"host\">\n        <titleInfo>\n          <title>Collection Title</title>\n        </titleInfo>\n        <identifier type=\"uri\">https://purl.stanford.edu/oo000oo0000</identifier>\n        <typeOfResource collection=\"yes\"/>\n      </relatedItem>\n      <accessCondition type=\"copyright\">Access Condition</accessCondition>\n    </mods>\n"
       }
       expect(mapper).to receive(:convert_to_solr_doc).and_return(expected_doc_hash)
@@ -265,6 +257,41 @@ describe SwMapper do
     end
   end
 
+  describe '#public_xml_to_fields' do
+    let(:mapper) { SwMapper.new('oo000oo0000') }
+    let(:public_xml_data_model) { double('DiscoveryIndexer::InputXml::PurlxmlModel').as_null_object }
+    before(:example) do
+      allow(mapper).to receive(:purlxml).and_return(public_xml_data_model)
+    end
+    it 'returns a Hash' do
+      expect(mapper.public_xml_to_fields).to be_an_instance_of(Hash)
+    end
+    it ':display_type from #display_type' do
+      expect(mapper).to receive(:display_type).and_return('disp_type')
+      expect(mapper.public_xml_to_fields[:display_type]).to eq 'disp_type'
+    end
+    it ':file_id from #file_ids' do
+      expect(mapper).to receive(:file_ids).and_return(['file1', 'file2'])
+      expect(mapper.public_xml_to_fields[:file_id]).to eq ['file1', 'file2']
+    end
+    it ':collection from #collection_ids' do
+      expect(mapper).to receive(:collection_ids).and_return(['coll_id1', 'coll_id2'])
+      expect(mapper.public_xml_to_fields[:collection]).to eq ['coll_id1', 'coll_id2']
+    end
+    it ':collection_with_title from #collection_with_title' do
+      expect(mapper).to receive(:collection_with_title).and_return(['coll_id1-|-coll_title1', 'coll_id2-|-coll_title2'])
+      expect(mapper.public_xml_to_fields[:collection_with_title]).to eq ['coll_id1-|-coll_title1', 'coll_id2-|-coll_title2']
+    end
+    it ':set from #constituent_ids' do
+      expect(mapper).to receive(:constituent_ids).and_return(['stit_id1', 'stit_id2'])
+      expect(mapper.public_xml_to_fields[:set]).to eq ['stit_id1', 'stit_id2']
+    end
+    it ':set_with_title from #constituent_with_title' do
+      expect(mapper).to receive(:constituent_with_title).and_return(['stit_id1-|-stit_title1', 'stit_id2-|-stit_title2'])
+      expect(mapper.public_xml_to_fields[:set_with_title]).to eq ['stit_id1-|-stit_title1', 'stit_id2-|-stit_title2']
+    end
+  end
+
   describe '#hard_coded_fields' do
     let(:mapper) { SwMapper.new('oa123ei4567') }
     before(:example) do
@@ -304,7 +331,7 @@ describe SwMapper do
       end
     end
 
-    describe 'positive_int?' do
+    describe '#positive_int?' do
       let(:mapper) { SwMapper.new('zz999zz9999') }
       it 'returns true of integer version of string is > 0' do
         expect(mapper.send(:positive_int?, '250')).to be true
@@ -335,7 +362,7 @@ describe SwMapper do
     end
   end
 
-  describe 'file_ids' do
+  describe '#file_ids' do
     it 'includes image_ids if display_type is image' do
       skip("need to write test")
     end
@@ -347,27 +374,65 @@ describe SwMapper do
     end
   end
 
-  describe 'collection' do
-    it 'includes collection druid if no ckey is present' do
-      skip("need to write test")
+  describe 'collection data support methods' do
+    let(:fake_druid) { 'oo000oo0000' }
+    let(:mapper) { described_class.new(fake_druid) }
+    let(:coll_data1) { double('discovery-indexer-collection1', searchworks_id: 'coll1_id', title: 'coll1_title') }
+    let(:coll_data2) { double('discovery-indexer-collection2', searchworks_id: 'coll2_id', title: 'coll2_title') }
+    describe '#collection_ids' do
+      it 'gets them from DiscoveryIndexer::GeneralMapper.collection_data.searchworks_id' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:collection_data).and_return([coll_data1, coll_data2])
+        expect(mapper.send(:collection_ids)).to eq ['coll1_id', 'coll2_id']
+      end
+      it 'is an empty array if no collection data is available' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:collection_data).and_return([])
+        expect(mapper.send(:collection_ids)).to eq []
+      end
     end
-    it 'includes collection ckey if ckey is present' do
-      skip("need to write test")
-    end
-    it 'is an empty array if no collection data is available' do
-      skip("need to write test")
+    describe '#collection_with_title' do
+      it 'returns Array of coll_id-|-coll_title from DiscoveryIndexer::GeneralMapper.collection_data' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:collection_data).and_return([coll_data1, coll_data2])
+        expect(mapper.send(:collection_with_title)).to eq ['coll1_id-|-coll1_title', 'coll2_id-|-coll2_title']
+      end
+      it 'is an empty array if no collection data is available' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:collection_data).and_return([])
+        expect(mapper.send(:collection_with_title)).to eq []
+      end
     end
   end
 
-  describe 'collection_with_title' do
-    it 'includes collection druid with collection title if no ckey is present' do
-      skip("need to write test")
+  describe 'constituent data support methods' do
+    let(:fake_druid) { 'oo000oo0000' }
+    let(:mapper) { described_class.new(fake_druid) }
+    let(:stit_data1) { double('discovery-indexer-collection1', searchworks_id: 'stit1_id', title: 'stit1_title') }
+    let(:stit_data2) { double('discovery-indexer-collection2', searchworks_id: 'stit2_id', title: 'stit2_title') }
+    describe '#constituent_ids' do
+      it 'gets them from DiscoveryIndexer::GeneralMapper.constituent_data.searchworks_id' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:constituent_data).and_return([stit_data1, stit_data2])
+        expect(mapper.send(:constituent_ids)).to eq ['stit1_id', 'stit2_id']
+      end
+      it 'is an empty array if no constituent data is available' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:constituent_data).and_return([])
+        expect(mapper.send(:constituent_ids)).to eq []
+      end
     end
-    it 'includes collection ckey with collection title if ckey is present' do
-      skip("need to write test")
-    end
-    it 'is an empty array if no collection data available' do
-      skip("need to write test")
+    describe '#constituent_with_title' do
+      it 'returns Array of coll_id-|-coll_title from DiscoveryIndexer::GeneralMapper.constituent_data' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:constituent_data).and_return([stit_data1, stit_data2])
+        expect(mapper.send(:constituent_with_title)).to eq ['stit1_id-|-stit1_title', 'stit2_id-|-stit2_title']
+      end
+      it 'is an empty array if no constituent data is available' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:constituent_data).and_return([])
+        expect(mapper.send(:constituent_with_title)).to eq []
+      end
     end
   end
 end

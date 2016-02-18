@@ -2,14 +2,17 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
   # You have access to these instance variables:
   # druid = object pid (no "druid:" prefix)
   # modsxml == Stanford::Mods::Record class object (modsxml.mods_ng_xml == Nokogiri document (for custom parsing)
-  # @purlxml == DiscoveryIndexer::InputXml::PurlxmlModel class object (@purlxml.public_xml == Nokogiri document (for custom parsing)
-  # @collection_data == hash of collections the druid belongs to {'oo000oo0000'=>{label: "Collection Name", catkey: "12345678"}}
+  # purlxml == DiscoveryIndexer::InputXml::PurlxmlModel class object (@purlxml.public_xml == Nokogiri document (for custom parsing)
+  # collection_data == Array of DiscoveryIndexer::Collections
+  # constituent_data == Array of DiscoveryIndexer::Collections
+
   # Create a Hash representing a Solr doc, with all MODS related fields populated.
   # @return [Hash] Hash representing the Solr document
   def convert_to_solr_doc
     solr_doc = {}
     solr_doc[:id] = druid
     solr_doc[:druid] = druid
+    solr_doc[:collection_type] = 'Digital Collection' if purlxml.is_collection
 
     solr_doc.update mods_to_title_fields
     solr_doc.update mods_to_author_fields
@@ -17,14 +20,10 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     solr_doc.update mods_to_publication_fields
     solr_doc.update mods_to_others
     solr_doc.update hard_coded_fields
+    solr_doc.update public_xml_to_fields
 
-    solr_doc[:collection] = collection
     solr_doc[:modsxml] = modsxml.to_xml
     solr_doc[:all_search] = modsxml.text.gsub(/\s+/, ' ')
-    solr_doc[:display_type] = display_type
-    solr_doc[:file_id] = file_ids
-    solr_doc[:collection_with_title] = collection_with_title
-    solr_doc[:collection_type] = 'Digital Collection' if purlxml.is_collection
     solr_doc
   end
 
@@ -122,6 +121,17 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     }
   end
 
+  def public_xml_to_fields
+    {
+      display_type: display_type,
+      file_id: file_ids,
+      collection: collection_ids,
+      collection_with_title: collection_with_title,
+      set: constituent_ids,
+      set_with_title: constituent_with_title
+    }
+  end
+
   protected
 
   # deprecated:  keeping in case we need to revert to not having negative numbers in date slider
@@ -172,18 +182,31 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     return purlxml.file_ids if display_type == 'file'
   end
 
-  # the collection druid for items in a collection
-  # @return [Array<String>] druids
-  def collection
+  # the ids of objects of which this object is a collection member
+  # @return [Array<String>] druids or ckeys of collection objects
+  def collection_ids
     collection_data.map(&:searchworks_id)
   end
 
-  # The collection druid or ckey and collection title for items
-  # in a collection for display in SearchWorks
-  # @return [Array<String>] druid -|- title or ckey -|- title
+  # The object ids concat with '-|-' then with object title for the objects of which THIS object is a collection member
+  # @return [Array<String>] id-|-title of collection objects
   def collection_with_title
     collection_data.map do |collection|
       "#{collection.searchworks_id}-|-#{collection.title}"
+    end
+  end
+
+  # the ids of objects of which this object is a constituent
+  # @return [Array<String>] druids or ckeys of the constituent objects
+  def constituent_ids
+    constituent_data.map(&:searchworks_id)
+  end
+
+  # The object ids concat with '-|-' then with object title for the objects of which THIS object is a constituent
+  # @return [Array<String>] id-|-title of the constituent objects
+  def constituent_with_title
+    constituent_data.map do |constituent|
+      "#{constituent.searchworks_id}-|-#{constituent.title}"
     end
   end
 end
