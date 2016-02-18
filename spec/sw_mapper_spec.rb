@@ -378,15 +378,34 @@ describe SwMapper do
     end
   end
 
-  describe 'collection_with_title' do
-    it 'includes collection druid with collection title if no ckey is present' do
-      skip("need to write test")
+  describe 'constituent data support methods' do
+    let(:fake_druid) { 'oo000oo0000' }
+    let(:mapper) { described_class.new(fake_druid) }
+    let(:stit_data1) { double('discovery-indexer-collection1', searchworks_id: 'stit1_id', title: 'stit1_title') }
+    let(:stit_data2) { double('discovery-indexer-collection2', searchworks_id: 'stit2_id', title: 'stit2_title') }
+    describe '#constituent_ids' do
+      it 'gets them from DiscoveryIndexer::GeneralMapper.constituent_data.searchworks_id' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:constituent_data).and_return([stit_data1, stit_data2])
+        expect(mapper.send(:constituent_ids)).to eq ['stit1_id', 'stit2_id']
+      end
+      it 'is an empty array if no constituent data is available' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:constituent_data).and_return([])
+        expect(mapper.send(:constituent_ids)).to eq []
+      end
     end
-    it 'includes collection ckey with collection title if ckey is present' do
-      skip("need to write test")
-    end
-    it 'is an empty array if no collection data available' do
-      skip("need to write test")
+    describe '#constituent_with_title' do
+      it 'returns Array of coll_id-|-coll_title from DiscoveryIndexer::GeneralMapper.constituent_data' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:constituent_data).and_return([stit_data1, stit_data2])
+        expect(mapper.send(:constituent_with_title)).to eq ['stit1_id-|-stit1_title', 'stit2_id-|-stit2_title']
+      end
+      it 'is an empty array if no constituent data is available' do
+        allow(mapper).to receive(:purlxml)
+        expect(mapper).to receive(:constituent_data).and_return([])
+        expect(mapper.send(:constituent_with_title)).to eq []
+      end
     end
   end
 end

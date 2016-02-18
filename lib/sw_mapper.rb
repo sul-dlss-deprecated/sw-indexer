@@ -185,4 +185,18 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
       "#{collection.searchworks_id}-|-#{collection.title}"
     end
   end
+
+  # the ids of objects of which this object is a constituent
+  # @return [Array<String>] druids or ckeys of the constituent objects
+  def constituent_ids
+    constituent_data.map(&:searchworks_id)
+  end
+
+  # The object ids concat with '-|-' then with object title for the objects of which THIS object is a constituent
+  # @return [Array<String>] id-|-title of the constituent objects
+  def constituent_with_title
+    constituent_data.map do |constituent|
+      "#{constituent.searchworks_id}-|-#{constituent.title}"
+    end
+  end
 end
