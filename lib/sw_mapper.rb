@@ -10,6 +10,7 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     solr_doc = {}
     solr_doc[:id] = druid
     solr_doc[:druid] = druid
+    solr_doc[:collection_type] = 'Digital Collection' if purlxml.is_collection
 
     solr_doc.update mods_to_title_fields
     solr_doc.update mods_to_author_fields
@@ -17,14 +18,10 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     solr_doc.update mods_to_publication_fields
     solr_doc.update mods_to_others
     solr_doc.update hard_coded_fields
+    solr_doc.update public_xml_to_fields
 
     solr_doc[:modsxml] = modsxml.to_xml
     solr_doc[:all_search] = modsxml.text.gsub(/\s+/, ' ')
-    solr_doc[:display_type] = display_type
-    solr_doc[:file_id] = file_ids
-    solr_doc[:collection] = collection_ids
-    solr_doc[:collection_with_title] = collection_with_title
-    solr_doc[:collection_type] = 'Digital Collection' if purlxml.is_collection
     solr_doc
   end
 
@@ -119,6 +116,15 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
       url_fulltext: "https://purl.stanford.edu/#{druid}",
       access_facet: 'Online',
       building_facet: 'Stanford Digital Repository'
+    }
+  end
+
+  def public_xml_to_fields
+    {
+      display_type: display_type,
+      file_id: file_ids,
+      collection: collection_ids,
+      collection_with_title: collection_with_title
     }
   end
 

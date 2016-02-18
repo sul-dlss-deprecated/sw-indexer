@@ -15,19 +15,11 @@ describe SwMapper do
       allow(DiscoveryIndexer::InputXml::Modsxml).to receive(:new).with(item_pid).and_return(item_image_mods)
       mapper = SwMapper.new('zz999zz9999')
       allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str(item_image_mods))
-      allow(mapper).to receive(:collection).and_return('oo000oo0000')
-      allow(mapper).to receive(:display_type).and_return('image')
-      allow(mapper).to receive(:file_ids).and_return('a24.jp2')
-      allow(mapper).to receive(:collection_with_title).and_return('oo000oo0000-|-Collection Title')
       expected_doc_hash =
       {
         all_search: ' Item title Personal name Role still image 1909 1915 Collection Title https://purl.stanford.edu/oo000oo0000 Access Condition ',
         id: 'zz999zz9999',
-        display_type: 'image',
         druid: 'zz999zz9999',
-        file_id: ['a24.jp2', 'a25.jp2', 'a26.jp2', 'a27.jp2', 'a28.jp2'],
-        collection: ['aa000bb1111'],
-        collection_with_title: ['aa000bb1111-|-Collection Name'],
         modsxml: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<mods xmlns=\"http://www.loc.gov/mods/v3\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" version=\"3.3\" xsi:schemaLocation=\"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd\">\n      <titleInfo>\n        <title>Item title</title>\n      </titleInfo>\n      <name type=\"personal\">\n        <namePart>Personal name</namePart>\n        <role>\n          <roleTerm authority=\"marcrelator\" type=\"text\">Role</roleTerm>\n        </role>\n      </name>\n      <typeOfResource>still image</typeOfResource>\n      <originInfo>\n        <dateCreated point=\"start\" keyDate=\"yes\">1909</dateCreated>\n        <dateCreated point=\"end\">1915</dateCreated>\n      </originInfo>\n      <relatedItem type=\"host\">\n        <titleInfo>\n          <title>Collection Title</title>\n        </titleInfo>\n        <identifier type=\"uri\">https://purl.stanford.edu/oo000oo0000</identifier>\n        <typeOfResource collection=\"yes\"/>\n      </relatedItem>\n      <accessCondition type=\"copyright\">Access Condition</accessCondition>\n    </mods>\n"
       }
       expect(mapper).to receive(:convert_to_solr_doc).and_return(expected_doc_hash)
@@ -262,6 +254,33 @@ describe SwMapper do
     it ':genre_ssim from Stanford::Mods::Record.sw_genre' do
       expect(smods_rec).to receive(:sw_genre).and_return(['genre 1', 'genre 2'])
       expect(mapper.mods_to_others[:genre_ssim]).to eq ['genre 1', 'genre 2']
+    end
+  end
+
+  describe '#public_xml_to_fields' do
+    let(:mapper) { SwMapper.new('oo000oo0000') }
+    let(:public_xml_data_model) { double('DiscoveryIndexer::InputXml::PurlxmlModel').as_null_object }
+    before(:example) do
+      allow(mapper).to receive(:purlxml).and_return(public_xml_data_model)
+    end
+    it 'returns a Hash' do
+      expect(mapper.public_xml_to_fields).to be_an_instance_of(Hash)
+    end
+    it ':display_type from #display_type' do
+      expect(mapper).to receive(:display_type).and_return('disp_type')
+      expect(mapper.public_xml_to_fields[:display_type]).to eq 'disp_type'
+    end
+    it ':file_id from #file_ids' do
+      expect(mapper).to receive(:file_ids).and_return(['file1', 'file2'])
+      expect(mapper.public_xml_to_fields[:file_id]).to eq ['file1', 'file2']
+    end
+    it ':collection from #collection_ids' do
+      expect(mapper).to receive(:collection_ids).and_return(['coll_id1', 'coll_id2'])
+      expect(mapper.public_xml_to_fields[:collection]).to eq ['coll_id1', 'coll_id2']
+    end
+    it ':collection_with_title from #collection_with_title' do
+      expect(mapper).to receive(:collection_with_title).and_return(['coll_id1-|-coll_title1', 'coll_id2-|-coll_title2'])
+      expect(mapper.public_xml_to_fields[:collection_with_title]).to eq ['coll_id1-|-coll_title1', 'coll_id2-|-coll_title2']
     end
   end
 
