@@ -123,7 +123,6 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
   def public_xml_to_fields
     {
-      display_type: display_type,
       file_id: file_ids,
       collection: collection_ids,
       collection_with_title: collection_with_title,
@@ -149,37 +148,12 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     false
   end
 
+  # the @id attribute of resource/file elements that match the dor_content_type
   # value is used to tell SearchWorks UI app of specific display needs for objects
-  # a config file value for add_display_type can be used to prepend a string to
-  #  xxx_collection or xxx_object
-  # e.g., Hydrus objects are a special display case
-  # Based on a value of :add_display_type in a collection's config yml file
-  #
-  # information on DOR content types:
-  #   https://consul.stanford.edu/display/chimera/DOR+content+types%2C+resource+types+and+interpretive+metadata
-  #
-  # @return [String] 'file' or DOR content type
-  def display_type
-    if purlxml.dor_display_type.present?
-      purlxml.dor_display_type
-    else
-      case purlxml.dor_content_type
-      when 'book'
-        'book'
-      when 'image', 'manuscript', 'map'
-        'image'
-      else
-        'file'
-      end
-    end
-  end
-
-  # the @id attribute of resource/file elements that match the display_type
   # @return [Array<String>] filenames
   def file_ids
     return if purlxml.is_collection
-    return purlxml.image_ids if %w(image book).include?(display_type)
-    return purlxml.file_ids if display_type == 'file'
+    return purlxml.image_ids if %w(book image manuscript map).include?(purlxml.dor_content_type)
   end
 
   # the ids of objects of which this object is a collection member

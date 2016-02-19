@@ -266,10 +266,6 @@ describe SwMapper do
     it 'returns a Hash' do
       expect(mapper.public_xml_to_fields).to be_an_instance_of(Hash)
     end
-    it ':display_type from #display_type' do
-      expect(mapper).to receive(:display_type).and_return('disp_type')
-      expect(mapper.public_xml_to_fields[:display_type]).to eq 'disp_type'
-    end
     it ':file_id from #file_ids' do
       expect(mapper).to receive(:file_ids).and_return(['file1', 'file2'])
       expect(mapper.public_xml_to_fields[:file_id]).to eq ['file1', 'file2']
@@ -345,32 +341,29 @@ describe SwMapper do
     end
   end
 
-  describe 'display_type' do
-    it 'is the display_type from the identityMetadata if it exists' do
-      skip("need to write test")
-    end
-    context 'is based upon the content type if no display_type' do
-      it 'is book when content type is book' do
-        skip("need to write test")
-      end
-      it 'is image when the content type is image, manuscript or map' do
-        skip("need to write test")
-      end
-      it 'is file when content type is not book, image, manuscript, or map' do
-        skip("need to write test")
-      end
-    end
-  end
-
   describe '#file_ids' do
-    it 'includes image_ids if display_type is image' do
-      skip("need to write test")
-    end
-    it 'includes file_ids if display_type is file' do
-      skip("need to write test")
+    let(:fake_druid) { 'zz999zz9999' }
+    let(:purl_xml_model) { double('DiscoveryIndexer::InputXml::PurlxmlModel').as_null_object }
+    let(:mapper) { described_class.new(fake_druid) }
+    it 'includes image_ids if dor_content_type is book, image, manuscript, or map' do
+      allow(purl_xml_model).to receive(:is_collection).and_return(false)
+      allow(purl_xml_model).to receive(:image_ids).and_return('zz999zz9999%2Fa24.jp2')
+      allow(mapper).to receive(:purlxml).and_return(purl_xml_model)
+      %w(book image manuscript map).each { |type|
+        allow(purl_xml_model).to receive(:dor_content_type).and_return(type)
+        expect(mapper.send(:file_ids)).to eq 'zz999zz9999%2Fa24.jp2'
+      }
     end
     it 'is nil if it is a collection' do
-      skip("need to write test")
+      allow(purl_xml_model).to receive(:is_collection).and_return(true)
+      allow(mapper).to receive(:purlxml).and_return(purl_xml_model)
+      expect(mapper.send(:file_ids)).to eq nil
+    end
+    it 'is nil if dor_content_type is not book, image, manuscript, or map' do
+      allow(purl_xml_model).to receive(:is_collection).and_return(false)
+      allow(purl_xml_model).to receive(:dor_content_type).and_return('file')
+      allow(mapper).to receive(:purlxml).and_return(purl_xml_model)
+      expect(mapper.send(:file_ids)).to eq nil
     end
   end
 
