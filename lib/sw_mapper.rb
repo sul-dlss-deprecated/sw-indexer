@@ -83,8 +83,7 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
       # deprecated pub_date_sort - use pub_year_isi; pub_date_sort is a string and requires weirdness for bc dates
       #   can remove after pub_year_isi is populated for all indexing data (i.e. solrmarc, crez) and app code is changed
       pub_date_sort: modsxml.pub_year_sort_str,
-      # TODO: need better implementation of imprint_display in stanford-mods
-      imprint_display: modsxml.pub_date_display,
+      imprint_display: modsxml.imprint_display_str,
 
       # deprecated pub_date Solr field - use pub_year_isi for sort key; pub_year_ss for display field
       #   can remove after other fields are populated for all indexing data (i.e. solrmarc, crez) and app code is changed

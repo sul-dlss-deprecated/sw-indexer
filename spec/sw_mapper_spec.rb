@@ -206,8 +206,8 @@ describe SwMapper do
       expect(mapper.mods_to_publication_fields[:pub_search]).to eq 'need pub_search impl in stanford-mods'
     end
     it ':imprint_display' do
-      expect(smods_rec).to receive(:pub_date_display).and_return('need imprint_display impl in stanford-mods')
-      expect(mapper.mods_to_publication_fields[:imprint_display]).to eq 'need imprint_display impl in stanford-mods'
+      expect(smods_rec).to receive(:imprint_display_str).and_return('imprint_display_str from stanford-mods')
+      expect(mapper.mods_to_publication_fields[:imprint_display]).to eq 'imprint_display_str from stanford-mods'
     end
   end
 
