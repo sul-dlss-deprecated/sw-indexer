@@ -1,10 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'base_indexer', '>= 0.5.0'
-gem 'discovery-indexer', '>= 1.0.0' # get constituent data from public_xml
+gem 'base_indexer', '>= 1.0.0'
 gem 'dor-fetcher', '>= 1.1.1'
-
-gem 'stanford-mods', '>= 2.0.0' # get new genre methods
 
 gem 'rails', '4.2.5.1'
 gem 'responders', '~> 2.0'

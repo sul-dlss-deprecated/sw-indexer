@@ -39,8 +39,8 @@ GEM
     addressable (2.4.0)
     arel (6.0.3)
     ast (2.2.0)
-    base_indexer (0.6.7)
-      discovery-indexer (>= 0.10.1)
+    base_indexer (1.0.0)
+      discovery-indexer (~> 1.0.1)
       is_it_working-cbeer
       rails (~> 4.1, >= 4.1.9)
       retries
@@ -85,12 +85,12 @@ GEM
       thor (~> 0.19.1)
       tins (~> 1.6.0)
     diff-lcs (1.2.5)
-    discovery-indexer (1.0.0)
+    discovery-indexer (1.0.1)
       nokogiri
       rest-client
       retries
       rsolr
-      stanford-mods
+      stanford-mods (~> 2.1)
     dlss-capistrano (3.2.0)
       capistrano (~> 3.0)
       capistrano-bundle_audit (>= 0.0.3)
@@ -246,7 +246,7 @@ GEM
     sshkit (1.8.1)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stanford-mods (2.1.0)
+    stanford-mods (2.2.0)
       activesupport
       mods (~> 2.0.2)
     term-ansicolor (1.3.2)
@@ -274,7 +274,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  base_indexer (>= 0.5.0)
+  base_indexer (>= 1.0.0)
   capistrano (~> 3.0)
   capistrano-bundler
   capistrano-passenger
@@ -282,7 +282,6 @@ DEPENDENCIES
   capistrano-rvm
   coffee-rails (~> 4.0.0)
   coveralls
-  discovery-indexer (>= 1.0.0)
   dlss-capistrano
   dor-fetcher (>= 1.1.1)
   equivalent-xml
@@ -299,7 +298,6 @@ DEPENDENCIES
   spring
   sprockets (>= 2.12.3)
   sqlite3
-  stanford-mods (>= 2.0.0)
   therubyracer
   turbolinks
   uglifier (>= 2.7.2)
