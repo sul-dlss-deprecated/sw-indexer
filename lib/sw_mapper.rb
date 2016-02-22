@@ -154,7 +154,7 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
   # @return [Array<String>] filenames
   def file_ids
     return if purlxml.is_collection
-    filename = purlxml.image_ids.first if %w(book image manuscript map).include?(purlxml.dor_content_type)
+    filename = purlxml.image_ids.first if %w(book image manuscript map webarchive-seed).include?(purlxml.dor_content_type)
     return filename.prepend("#{druid}%2F") unless filename.nil?
   end
 

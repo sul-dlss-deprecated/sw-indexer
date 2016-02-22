@@ -348,7 +348,7 @@ describe SwMapper do
     it 'includes image_ids with druid and %2F pre-prended if dor_content_type is book, image, manuscript, or map' do
       allow(purl_xml_model).to receive(:is_collection).and_return(false)
       allow(mapper).to receive(:purlxml).and_return(purl_xml_model)
-      %w(book image manuscript map).each { |type|
+      %w(book image manuscript map webarchive-seed).each { |type|
         allow(purl_xml_model).to receive(:image_ids).and_return(['a24.jp2', 'thumb.jp2'])
         allow(purl_xml_model).to receive(:dor_content_type).and_return(type)
         expect(mapper.send(:file_ids)).to eq 'zz999zz9999%2Fa24.jp2'
@@ -359,7 +359,7 @@ describe SwMapper do
       allow(mapper).to receive(:purlxml).and_return(purl_xml_model)
       expect(mapper.send(:file_ids)).to eq nil
     end
-    it 'is nil if dor_content_type is not book, image, manuscript, or map' do
+    it 'is nil if dor_content_type is not book, image, manuscript, map, or webarchive-seed' do
       allow(purl_xml_model).to receive(:is_collection).and_return(false)
       allow(purl_xml_model).to receive(:dor_content_type).and_return('file')
       allow(mapper).to receive(:purlxml).and_return(purl_xml_model)
