@@ -149,13 +149,11 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
   # the @id attribute of resource/file elements that match the dor_content_type
   # value is used to tell SearchWorks UI app of specific display needs for objects
-  # The SearchWorks app only wants image ids and needs the corresponding druid
-  # and %2F pre-prended to the file_id
-  # @return [Array<String>] filenames
+  # The SearchWorks app only wants first image id which comes from purl_model.sw_image_ids
+  # @return [String] filename
   def file_ids
     return if purlxml.is_collection
-    filename = purlxml.image_ids.first if %w(book image manuscript map webarchive-seed).include?(purlxml.dor_content_type)
-    return filename.prepend("#{druid}%2F") unless filename.nil?
+    purlxml.sw_image_ids.first if %w(book image manuscript map webarchive-seed).include?(purlxml.dor_content_type)
   end
 
   # the ids of objects of which this object is a collection member

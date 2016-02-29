@@ -343,13 +343,13 @@ describe SwMapper do
 
   describe '#file_ids' do
     let(:fake_druid) { 'zz999zz9999' }
-    let(:purl_xml_model) { double('DiscoveryIndexer::InputXml::PurlxmlModel').as_null_object }
+    let(:purl_xml_model) { DiscoveryIndexer::InputXml::PurlxmlModel.new }
     let(:mapper) { described_class.new(fake_druid) }
-    it 'includes image_ids with druid and %2F pre-prended if dor_content_type is book, image, manuscript, or map' do
+    it 'is populated with the first image_id only if dor_content_type is book, image, manuscript, map, or webarchive-seed' do
       allow(purl_xml_model).to receive(:is_collection).and_return(false)
+      allow(purl_xml_model).to receive(:sw_image_ids).and_return(['zz999zz9999%2Fa24.jp2', 'zz999zz9999%2Fthumb.jp2'])
       allow(mapper).to receive(:purlxml).and_return(purl_xml_model)
       %w(book image manuscript map webarchive-seed).each { |type|
-        allow(purl_xml_model).to receive(:image_ids).and_return(['a24.jp2', 'thumb.jp2'])
         allow(purl_xml_model).to receive(:dor_content_type).and_return(type)
         expect(mapper.send(:file_ids)).to eq 'zz999zz9999%2Fa24.jp2'
       }
