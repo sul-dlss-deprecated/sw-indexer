@@ -110,6 +110,7 @@ GEM
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     hike (1.2.3)
+    honeybadger (2.6.0)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
@@ -286,6 +287,7 @@ DEPENDENCIES
   dlss-capistrano
   dor-fetcher (>= 1.1.1)
   equivalent-xml
+  honeybadger (~> 2.0)
   jbuilder (~> 2.0)
   jquery-rails
   mysql2 (~> 0.3.20)
