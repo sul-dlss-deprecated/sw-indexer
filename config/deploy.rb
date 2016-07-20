@@ -1,20 +1,24 @@
-# config valid only for Capistrano 3.4
-lock '3.4.0'
-
-set :application, "sw-indexer-service"
-set :repo_url, "https://github.com/sul-dlss/sw-indexer-service.git"
+set :application, "sw-indexer"
+set :repo_url, "https://github.com/sul-dlss/sw-indexer.git"
+set :user, 'harvestdor'
 
 # Default branch is :master
-ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
-fetch(:branch)
+set :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
-# Default value for :log_level is :debug
-set :log_level, :info
-
-set :stages, %W(staging development production)
+set :home_directory, "/opt/app/#{fetch(:user)}"
+set :deploy_to, "#{fetch(:home_directory)}/#{fetch(:application)}"
 
 # Default value for :linked_files is []
-set :linked_files, %w{config/database.yml config/solr.yml}
+set :linked_files, %w{config/database.yml config/solr.yml config/secrets.yml config/honeybadger.yml}
 
 # Default value for linked_dirs is []
-set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle}
+set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+
+# Default value for keep_releases is 5
+set :keep_releases, 5
+
+# server uses standardized suffix
+server "sw-indexing-#{fetch(:stage)}.stanford.edu", user: fetch(:user), roles: %w{web db app}
+
+# honeybadger_env otherwise defaults to rails_env
+set :honeybadger_env, "#{fetch(:stage)}"
