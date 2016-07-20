@@ -129,7 +129,7 @@ GEM
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.99.1)
-    mini_portile2 (2.0.0)
+    mini_portile2 (2.1.0)
     minitest (5.8.4)
     mods (2.0.3)
       iso-639
@@ -142,14 +142,16 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (3.0.2)
     netrc (0.11.0)
-    nokogiri (1.6.7.2)
-      mini_portile2 (~> 2.0.0.rc2)
+    nokogiri (1.6.8)
+      mini_portile2 (~> 2.1.0)
+      pkg-config (~> 1.1.7)
     nom-xml (0.5.4)
       activesupport (>= 3.2.18)
       i18n
       nokogiri
     parser (2.3.0.6)
       ast (~> 2.2)
+    pkg-config (1.1.7)
     powerpack (0.1.1)
     rack (1.6.4)
     rack-test (0.6.3)
@@ -302,4 +304,4 @@ DEPENDENCIES
   uglifier (>= 2.7.2)
 
 BUNDLED WITH
-   1.11.2
+   1.12.5
