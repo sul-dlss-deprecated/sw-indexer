@@ -5,9 +5,6 @@ gem 'dor-fetcher', '>= 1.1.1'
 
 gem 'rails', '~> 4.2'
 gem 'responders', '~> 2.0'
-# NOTE:  we may not actually be using a database
-gem 'mysql2', '~> 0.3.20'
-gem 'sqlite3'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
