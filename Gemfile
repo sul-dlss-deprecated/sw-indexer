@@ -11,9 +11,6 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-# Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-gem 'spring', group: :development
-
 gem 'honeybadger', '~> 2.0'
 
 gem 'rubocop', '= 0.37.2', group: [:development, :test] # Update this when 0.38.1 comes out - there was a bug in 0.38.0 with rubocop-rspec
