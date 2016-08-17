@@ -12,7 +12,7 @@ set :deploy_to, "#{fetch(:home_directory)}/#{fetch(:application)}"
 set :linked_files, %w{config/database.yml config/solr.yml config/secrets.yml config/honeybadger.yml}
 
 # Default value for linked_dirs is []
-set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system config/settings}
 
 # Default value for keep_releases is 5
 set :keep_releases, 5
