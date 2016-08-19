@@ -22,6 +22,7 @@ group :test do
   gem 'rspec-rails'
   gem 'equivalent-xml'
   gem 'coveralls', require: false
+  gem 'webmock'
 end
 
 group :development, :test do
