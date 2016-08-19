@@ -33,5 +33,4 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   config.dor_fetcher_url = 'https://dorfetcher-stage.stanford.edu'
-  DiscoveryIndexer::PURL_DEFAULT = 'http://purl-test.stanford.edu/'
 end
