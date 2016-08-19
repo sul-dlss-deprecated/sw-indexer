@@ -22,6 +22,12 @@ group :test do
   gem 'rspec-rails'
   gem 'equivalent-xml'
   gem 'coveralls', require: false
+  gem 'webmock'
+end
+
+group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug'
 end
 
 group :deployment do

@@ -5,13 +5,38 @@ describe SwIndexerEngine do
   let(:smods_rec) { Stanford::Mods::Record.new }
   let(:item_pid) { 'druid:zz999zz9999' }
   let(:ckey_doc) { double('PurlThing', catkey: '12345') }
-  subject { described_class.new }
+  let(:no_ckey_doc) { double('PurlThing', catkey: nil) }
 
   describe 'index' do
-    it 'returns nil if there is a catkey present' do
-      allow(subject).to receive(:purl_model).with(item_pid).and_return(ckey_doc)
-      expect(subject.index(item_pid)).to be_nil
-    end
+    context 'for targets that should not be skipped checking' do
+      it 'returns nil if there is a catkey present' do
+        expect(subject).to receive(:purl_model).with(item_pid).and_return(ckey_doc)
+        expect(subject.index(item_pid, 'NOTTOBESKIPPED' => true)).to be_nil
+      end
+      it 'proceeds with indexing' do
+        stub_purl_and_solr
 
+        expect(subject).not_to receive(:purl_model)
+        expect(subject.index(item_pid, 'SEARCHWORKSPREVIEW' => true)).to be_nil
+      end
+    end
+    context 'for targets that should be skipped checking' do
+      it 'proceeds with indexing' do
+        stub_purl_and_solr
+
+        expect(subject).not_to receive(:purl_model).with(item_pid)
+        expect(subject.index(item_pid, 'SEARCHWORKSPREVIEW' => true)).to be_nil
+      end
+    end
+  end
+
+  def stub_purl_and_solr
+    stub_request(:get, 'https://purl.stanford.edu/druid:zz999zz9999.xml')
+      .to_return(status: 200, body: item_image_xml)
+    stub_request(:get, 'https://purl.stanford.edu/druid:zz999zz9999.mods')
+      .to_return(status: 200, body: item_image_xml)
+    stub_request(:get, 'https://purl.stanford.edu/oo000oo0000.xml')
+      .to_return(status: 200, body: coll_image_xml)
+    stub_request(:post, /solr/)
   end
 end
