@@ -14,7 +14,11 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
     # If a catkey exists in the purl_model, stop processing the druid and leave
     # the method because access to the digital object will be provided by an 856
     # in the corresponding MARC record
-    return if purl_model(druid).catkey.present?
+    targets.each do |target_key, target_value|
+      if target_value == true && !Settings.SKIP_CATKEY_CHECK.include?(target_key)
+        return nil if purl_model(druid).catkey.present?
+      end
+    end
 
     # Create the solr document for indexing using the Searchworks mapper and the
     # mods, purl, and collection information
