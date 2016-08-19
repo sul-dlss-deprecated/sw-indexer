@@ -24,6 +24,11 @@ group :test do
   gem 'coveralls', require: false
 end
 
+group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug'
+end
+
 group :deployment do
   gem 'capistrano', '~> 3.0'
   gem 'dlss-capistrano'
