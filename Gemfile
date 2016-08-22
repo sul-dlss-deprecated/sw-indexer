@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'base_indexer', '>= 2.0.0'
+gem 'base_indexer', '3.0.0.pre1'
 gem 'dor-fetcher', '>= 1.1.1'
 
 gem 'rails', '~> 4.2'
