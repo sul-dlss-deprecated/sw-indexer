@@ -4,6 +4,7 @@ describe SwIndexerEngine do
   include XmlFixtures
   let(:smods_rec) { Stanford::Mods::Record.new }
   let(:item_pid) { 'druid:zz999zz9999' }
+  let(:book_pid) { 'druid:cg160px5426' }
   let(:ckey_doc) { double('PurlThing', catkey: '12345') }
   let(:no_ckey_doc) { double('PurlThing', catkey: nil) }
 
@@ -26,6 +27,17 @@ describe SwIndexerEngine do
 
         expect(subject).not_to receive(:purl_model).with(item_pid)
         expect(subject.index(item_pid, 'SEARCHWORKSPREVIEW' => true)).to be_nil
+      end
+    end
+    describe 'relase tag verification' do
+      it 'checks the release tag' do
+        stub_request(:get, 'https://purl.stanford.edu/druid:cg160px5426.xml')
+          .to_return(status: 200, body: item_book_xml)
+        stub_request(:get, 'https://purl.stanford.edu/druid:cg160px5426.mods')
+          .to_return(status: 200, body: item_book_mods)
+        stub_request(:get, 'https://purl.stanford.edu/cj445qq4021.xml')
+          .to_return(status: 200)
+        expect(subject.index(book_pid, 'SEARCHWORKS' => false)).to be_nil
       end
     end
   end
