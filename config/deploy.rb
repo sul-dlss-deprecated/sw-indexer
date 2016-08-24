@@ -9,7 +9,7 @@ set :home_directory, "/opt/app/#{fetch(:user)}"
 set :deploy_to, "#{fetch(:home_directory)}/#{fetch(:application)}"
 
 # Default value for :linked_files is []
-set :linked_files, %w{config/database.yml config/solr.yml config/secrets.yml config/honeybadger.yml}
+set :linked_files, %w{config/solr.yml config/secrets.yml config/honeybadger.yml}
 
 # Default value for linked_dirs is []
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system config/settings}
