@@ -15,7 +15,7 @@ cache: bundler
 before_script:
 - cp config/solr.yml.example config/solr.yml
 
-script: bundle exec rake
+script: bundle exec rake ci
 
 after_success:
   coveralls
