@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'base_indexer', '3.0.0.pre1'
-gem 'dor-fetcher', '>= 1.1.1'
 
 gem 'rails', '~> 4.2'
 gem 'responders', '~> 2.0'
@@ -15,7 +14,7 @@ gem 'config'
 
 gem 'honeybadger', '~> 2.0'
 
-gem 'rubocop', '= 0.37.2', group: [:development, :test] # Update this when 0.38.1 comes out - there was a bug in 0.38.0 with rubocop-rspec
+gem 'rubocop', group: [:development, :test]
 gem 'rubocop-rspec', group: [:development, :test]
 
 group :test do
