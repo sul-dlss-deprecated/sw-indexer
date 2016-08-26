@@ -151,8 +151,6 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
   # @return true if the string parses into an int >= 0
   def positive_int?(str)
     str.to_i >= 0
-  rescue
-    false
   end
 
   # the @id attribute of resource/file elements that match the dor_content_type
