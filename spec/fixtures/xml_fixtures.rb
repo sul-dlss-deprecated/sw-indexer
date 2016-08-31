@@ -299,51 +299,6 @@ module XmlFixtures
            </file>
          </resource>
        </contentMetadata>
-       <rightsMetadata>
-         <access type="discover">
-           <machine>
-             <world/>
-           </machine>
-         </access>
-         <access type="read">
-           <machine>
-             <world/>
-           </machine>
-         </access>
-         <use>
-           <human type="useAndReproduction"/>
-           <human type="creativeCommons"/>
-           <machine type="creativeCommons"/>
-         </use>
-         <copyright>
-           <human type="copyright">Copyright</human>
-         </copyright>
-       </rightsMetadata>
-       <rdf:RDF xmlns:fedora="info:fedora/fedora-system:def/relations-external#" xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:hydra="http://projecthydra.org/ns/relations#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-         <rdf:Description rdf:about="info:fedora/druid:cg160px5426">
-         <fedora:isMemberOf rdf:resource="info:fedora/druid:cj445qq4021"/>
-         <fedora:isMemberOfCollection rdf:resource="info:fedora/druid:cj445qq4021"/>
-         </rdf:Description>
-       </rdf:RDF>
-       <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-         <dc:identifier>RBC_QA76.P396FF_5:3</dc:identifier>
-         <dc:type>Text</dc:type>
-         <dc:type>newsletters</dc:type>
-         <dc:title>People's Computer Company. 5:3</dc:title>
-         <dc:contributor>People's Computer Company (Creator)</dc:contributor>
-         <dc:date>1976-11</dc:date>
-         <dc:format>1 newsletter</dc:format>
-         <dc:format>volume</dc:format>
-         <dc:format>image/jpeg</dc:format>
-         <dc:subject>Computer industry--United States--History</dc:subject>
-         <dc:subject>Microelectronics industry</dc:subject>
-         <dc:subject>People's Computer Company</dc:subject>
-         <dc:language>eng</dc:language>
-         <dc:relation type="collection">People's Computer Company</dc:relation>
-       </oai_dc:dc>
-       <ReleaseData>
-         <release to="Searchworks">true</release>
-       </ReleaseData>
      </publicObject>
     xml
   end
