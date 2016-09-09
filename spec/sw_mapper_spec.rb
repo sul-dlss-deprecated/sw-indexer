@@ -2,26 +2,20 @@ require 'rails_helper'
 
 describe SwMapper do
   include XmlFixtures
+  let(:item_pid) { 'zz999zz9999' }
+  let(:collection_pid) { 'oo000oo0000' }
   let(:smods_rec) { Stanford::Mods::Record.new }
-  let(:item_pid) { 'druid:zz999zz9999' }
 
   describe '#convert_to_solr_doc' do
     it 'correctly maps MODS digital object to Solr doc hash' do
-      smods_rec.from_nk_node(Nokogiri::XML(item_image_mods))
-      purl_parser=DiscoveryIndexer::InputXml::PurlxmlParserStrict.new(item_pid,Nokogiri::XML(item_image_xml))
-      purl=purl_parser.parse()
-      collection_names ||= {'oo000oo0000'=>{:label=>'Test Collection Name',:catkey=>'000001'}}
-      collection_data=collection_names.map do |k,v|
-        col=DiscoveryIndexer::Collection.new(k)
-        allow(col).to receive(:title).and_return v[:label]
-        allow(col).to receive(:searchworks_id).and_return k
-        col
-      end
-      mapper = described_class.new(item_pid)
-      allow(mapper).to receive(:collection_data).and_return(collection_data)
-      allow(mapper).to receive(:modsxml).and_return(smods_rec)
-      allow(mapper).to receive(:purlxml).and_return(purl)
-
+      # item calls
+      stub_request(:get, "https://purl.stanford.edu/#{item_pid}.xml").
+               to_return(status: 200, body: item_image_xml, headers: {})                        
+      stub_request(:get, "https://purl.stanford.edu/#{item_pid}.mods").
+              to_return(status: 200, body: item_image_mods, headers: {})               
+      # collection call
+      stub_request(:get, "https://purl.stanford.edu/#{collection_pid}.xml").
+               to_return(status: 200, body: coll_image_xml, headers: {})        
       expected_doc_hash =        
         { id: item_pid, 
           druid: item_pid, 
@@ -66,17 +60,17 @@ describe SwMapper do
           summary_search: nil, 
           toc_search: nil,
           url_suppl: nil,
-          url_fulltext: "https://purl.stanford.edu/druid:zz999zz9999",
+          url_fulltext: "https://purl.stanford.edu/#{item_pid}",
           access_facet: "Online",
           building_facet: "Stanford Digital Repository",
-          file_id: "druid:zz999zz9999%2Fa24.jp2",
-          collection: ["oo000oo0000"],
-          collection_with_title: ["oo000oo0000-|-Test Collection Name"], 
+          file_id: "#{item_pid}%2Fa24.jp2",
+          collection: ["9615156"],
+          collection_with_title: ["9615156-|-Object Label"],
           set: [], 
           set_with_title: [], 
           modsxml: "<?xml version=\"1.0\"?>\n<mods xmlns=\"http://www.loc.gov/mods/v3\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" version=\"3.3\" xsi:schemaLocation=\"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd\">\n      <titleInfo>\n        <title>Item title</title>\n      </titleInfo>\n      <name type=\"personal\">\n        <namePart>Personal name</namePart>\n        <role>\n          <roleTerm authority=\"marcrelator\" type=\"text\">Role</roleTerm>\n        </role>\n      </name>\n      <typeOfResource>still image</typeOfResource>\n      <originInfo>\n        <dateCreated point=\"start\" keyDate=\"yes\">1909</dateCreated>\n        <dateCreated point=\"end\">1915</dateCreated>\n      </originInfo>\n      <relatedItem type=\"host\">\n        <titleInfo>\n          <title>Collection Title</title>\n        </titleInfo>\n        <identifier type=\"uri\">https://purl.stanford.edu/oo000oo0000</identifier>\n        <typeOfResource collection=\"yes\"/>\n      </relatedItem>\n      <accessCondition type=\"copyright\">Access Condition</accessCondition>\n    </mods>\n", :all_search=>" Item title Personal name Role still image 1909 1915 Collection Title https://purl.stanford.edu/oo000oo0000 Access Condition "
         }
-      expect(mapper.convert_to_solr_doc).to eq expected_doc_hash
+      expect(described_class.new(item_pid).convert_to_solr_doc).to eq expected_doc_hash
     end
   end
 
