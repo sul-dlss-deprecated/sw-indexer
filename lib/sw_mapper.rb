@@ -29,15 +29,23 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
   # @return [Hash] Hash representing the title fields
   def mods_to_title_fields
-    short_title = modsxml.sw_short_title
-    full_title = modsxml.sw_full_title
+    # check to see if all of the sw titles are blank, if so, we will set to [Untitled]
+    if modsxml.full_titles.all?(&:blank?)
+      short_title=full_title=sort_title=sw_title_display=sw_addl_titles='[Untitled]'
+    else
+      short_title = modsxml.sw_short_title
+      full_title = modsxml.sw_full_title
+      sort_title = modsxml.sw_sort_title
+      sw_title_display = modsxml.sw_title_display
+      sw_addl_titles=modsxml.sw_addl_titles
+    end
     {
       title_245a_search: short_title,
       title_245_search: full_title,
-      title_variant_search: modsxml.sw_addl_titles,
-      title_sort: modsxml.sw_sort_title,
+      title_variant_search: sw_addl_titles,
+      title_sort: sort_title,
       title_245a_display: short_title,
-      title_display: modsxml.sw_title_display,
+      title_display: sw_title_display,
       title_full_display: full_title
     }
   end

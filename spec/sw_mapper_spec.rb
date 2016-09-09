@@ -4,33 +4,120 @@ describe SwMapper do
   include XmlFixtures
   let(:smods_rec) { Stanford::Mods::Record.new }
   let(:item_pid) { 'druid:zz999zz9999' }
-  let(:item_purl_xml) { "<publicObject id='druid:zz999zz9999'></publicObject>" }
-  let(:coll_pid) { 'druid:oo000oo0000' }
-  let(:coll_purl_xml) { "<publicObject id='druid:oo000oo0000'></publicObject>" }
 
   describe '#convert_to_solr_doc' do
     it 'correctly maps MODS digital object to Solr doc hash' do
-      skip("test broken: it always passes regardless of what is in doc hash")
-      allow(DiscoveryIndexer::InputXml::PurlxmlParserStrict).to receive(:new).with(item_pid, item_image_xml).and_return(item_purl_xml)
-      allow(DiscoveryIndexer::InputXml::Modsxml).to receive(:new).with(item_pid).and_return(item_image_mods)
-      mapper = SwMapper.new('zz999zz9999')
-      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str(item_image_mods))
-      expected_doc_hash =
-      {
-        all_search: ' Item title Personal name Role still image 1909 1915 Collection Title https://purl.stanford.edu/oo000oo0000 Access Condition ',
-        id: 'zz999zz9999',
-        druid: 'zz999zz9999',
-        modsxml: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<mods xmlns=\"http://www.loc.gov/mods/v3\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" version=\"3.3\" xsi:schemaLocation=\"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd\">\n      <titleInfo>\n        <title>Item title</title>\n      </titleInfo>\n      <name type=\"personal\">\n        <namePart>Personal name</namePart>\n        <role>\n          <roleTerm authority=\"marcrelator\" type=\"text\">Role</roleTerm>\n        </role>\n      </name>\n      <typeOfResource>still image</typeOfResource>\n      <originInfo>\n        <dateCreated point=\"start\" keyDate=\"yes\">1909</dateCreated>\n        <dateCreated point=\"end\">1915</dateCreated>\n      </originInfo>\n      <relatedItem type=\"host\">\n        <titleInfo>\n          <title>Collection Title</title>\n        </titleInfo>\n        <identifier type=\"uri\">https://purl.stanford.edu/oo000oo0000</identifier>\n        <typeOfResource collection=\"yes\"/>\n      </relatedItem>\n      <accessCondition type=\"copyright\">Access Condition</accessCondition>\n    </mods>\n"
-      }
-      expect(mapper).to receive(:convert_to_solr_doc).and_return(expected_doc_hash)
-      mapper.convert_to_solr_doc
+      smods_rec.from_nk_node(Nokogiri::XML(item_image_mods))
+      purl_parser=DiscoveryIndexer::InputXml::PurlxmlParserStrict.new(item_pid,Nokogiri::XML(item_image_xml))
+      purl=purl_parser.parse()
+      collection_names ||= {'oo000oo0000'=>{:label=>'Test Collection Name',:catkey=>'000001'}}
+      collection_data=collection_names.map do |k,v|
+        col=DiscoveryIndexer::Collection.new(k)
+        allow(col).to receive(:title).and_return v[:label]
+        allow(col).to receive(:searchworks_id).and_return k
+        col
+      end
+      mapper = described_class.new(item_pid)
+      allow(mapper).to receive(:collection_data).and_return(collection_data)
+      allow(mapper).to receive(:modsxml).and_return(smods_rec)
+      allow(mapper).to receive(:purlxml).and_return(purl)
+
+      expected_doc_hash =        
+        { id: item_pid, 
+          druid: item_pid, 
+          title_245a_search: "Item title", 
+          title_245_search:  "Item title.",
+          title_variant_search: [],
+          title_sort: "Item title",
+          title_245a_display: "Item title",
+          title_display: "Item title", 
+          title_full_display: "Item title.", 
+          author_1xx_search: nil, 
+          author_7xx_search: ["Personal name"], 
+          author_person_facet: ["Personal name"],
+          author_other_facet: [],
+          author_sort: "\u{10FFFF} Item title",
+          author_corp_display: [],
+          author_meeting_display: [],
+          author_person_display: ["Personal name"],
+          author_person_full_display: ["Personal name"],
+          topic_search: nil, 
+          geographic_search: nil,
+          subject_other_search: nil,
+          subject_other_subvy_search: nil, 
+          subject_all_search: nil, 
+          topic_facet: nil, 
+          geographic_facet: nil, 
+          era_facet: nil, 
+          pub_search: nil, 
+          pub_year_isi: 1909, 
+          pub_date_sort: "1909",
+          imprint_display: "1909 - 1915",
+          pub_date: "1909",
+          pub_year_ss: "1909",
+          pub_year_tisim: 1909,
+          creation_year_isi: 1909,
+          publication_year_isi: nil,
+          format_main_ssim: ["Image"],
+          format: ["Image"],
+          genre_ssim: [], 
+          language: [],
+          physical: nil,
+          summary_search: nil, 
+          toc_search: nil,
+          url_suppl: nil,
+          url_fulltext: "https://purl.stanford.edu/druid:zz999zz9999",
+          access_facet: "Online",
+          building_facet: "Stanford Digital Repository",
+          file_id: "druid:zz999zz9999%2Fa24.jp2",
+          collection: ["oo000oo0000"],
+          collection_with_title: ["oo000oo0000-|-Test Collection Name"], 
+          set: [], 
+          set_with_title: [], 
+          modsxml: "<?xml version=\"1.0\"?>\n<mods xmlns=\"http://www.loc.gov/mods/v3\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" version=\"3.3\" xsi:schemaLocation=\"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd\">\n      <titleInfo>\n        <title>Item title</title>\n      </titleInfo>\n      <name type=\"personal\">\n        <namePart>Personal name</namePart>\n        <role>\n          <roleTerm authority=\"marcrelator\" type=\"text\">Role</roleTerm>\n        </role>\n      </name>\n      <typeOfResource>still image</typeOfResource>\n      <originInfo>\n        <dateCreated point=\"start\" keyDate=\"yes\">1909</dateCreated>\n        <dateCreated point=\"end\">1915</dateCreated>\n      </originInfo>\n      <relatedItem type=\"host\">\n        <titleInfo>\n          <title>Collection Title</title>\n        </titleInfo>\n        <identifier type=\"uri\">https://purl.stanford.edu/oo000oo0000</identifier>\n        <typeOfResource collection=\"yes\"/>\n      </relatedItem>\n      <accessCondition type=\"copyright\">Access Condition</accessCondition>\n    </mods>\n", :all_search=>" Item title Personal name Role still image 1909 1915 Collection Title https://purl.stanford.edu/oo000oo0000 Access Condition "
+        }
+      expect(mapper.convert_to_solr_doc).to eq expected_doc_hash
     end
   end
 
+  describe '#blank_title_returns_untitled' do
+    let(:fake_druid) { 'oo000oo0000' }
+    let(:mapper) { described_class.new(fake_druid) }
+    let(:smods_rec) { Stanford::Mods::Record.new }
+    it 'uses "Untitled" for the title if the title node is totally missing from MODS' do
+      mods=<<-EOF
+        <mods xmlns="#{Mods::MODS_NS}">
+          <nothingHere/>
+        </mods>
+        EOF
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str(mods))
+      mapped_sw_title_fields=mapper.mods_to_title_fields
+      [:title_245a_search,:title_245_search,:title_variant_search,:title_sort,:title_245a_display,:title_display,:title_full_display].each do |title_field|
+        expect(mapped_sw_title_fields[title_field]).to eq '[Untitled]'
+      end
+    end
+    it 'uses "Untitled" for the title if the title is set to a blank string in the MODS' do
+      mods=<<-EOF
+        <mods xmlns="#{Mods::MODS_NS}">
+          <titleInfo>
+            <title></title>
+          </titleInfo>
+        </mods>
+        EOF
+      allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str(mods))
+      mapped_sw_title_fields=mapper.mods_to_title_fields
+      [:title_245a_search,:title_245_search,:title_variant_search,:title_sort,:title_245a_display,:title_display,:title_full_display].each do |title_field|
+        expect(mapped_sw_title_fields[title_field]).to eq '[Untitled]'
+      end
+    end
+  end
+  
   describe '#mods_to_title_fields' do
-    let(:mapper) { SwMapper.new('oo000oo0000') }
+    let(:mapper) { described_class.new('oo000oo0000') }
     before(:example) do
       allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
+      allow(smods_rec).to receive(:full_titles).and_return(['something not blank'])
+      allow(smods_rec).to receive(:sw_addl_titles).and_return(['something not blank'])
     end
     it 'returns a hash' do
       expect(mapper.mods_to_title_fields).to be_an_instance_of(Hash)
@@ -66,7 +153,7 @@ describe SwMapper do
   end
 
   describe '#mods_to_author_fields' do
-    let(:mapper) { SwMapper.new('oo000oo0000') }
+    let(:mapper) { described_class.new('oo000oo0000') }
     before(:example) do
       allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
     end
@@ -112,7 +199,7 @@ describe SwMapper do
   end
 
   describe '#mods_to_subject_fields' do
-    let(:mapper) { SwMapper.new('oo000oo0000') }
+    let(:mapper) { described_class.new('oo000oo0000') }
     before(:example) do
       allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
     end
@@ -154,7 +241,7 @@ describe SwMapper do
   end
 
   describe '#mods_to_publication_fields' do
-    let(:mapper) { SwMapper.new('oo000oo0000') }
+    let(:mapper) { described_class.new('oo000oo0000') }
     before(:example) do
       allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
     end
@@ -212,7 +299,7 @@ describe SwMapper do
   end
 
   describe '#mods_to_others' do
-    let(:mapper) { SwMapper.new('oo000oo0000') }
+    let(:mapper) { described_class.new('oo000oo0000') }
     before(:example) do
       allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
     end
@@ -258,7 +345,7 @@ describe SwMapper do
   end
 
   describe '#public_xml_to_fields' do
-    let(:mapper) { SwMapper.new('oo000oo0000') }
+    let(:mapper) { described_class.new('oo000oo0000') }
     let(:public_xml_data_model) { double('DiscoveryIndexer::InputXml::PurlxmlModel').as_null_object }
     before(:example) do
       allow(mapper).to receive(:purlxml).and_return(public_xml_data_model)
@@ -289,7 +376,7 @@ describe SwMapper do
   end
 
   describe '#hard_coded_fields' do
-    let(:mapper) { SwMapper.new('oa123ei4567') }
+    let(:mapper) { described_class.new('oa123ei4567') }
     before(:example) do
       allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str('<mods/>'))
     end
@@ -309,7 +396,7 @@ describe SwMapper do
 
   context 'pub date slider field support methods' do
     describe '#date_slider_vals_for_pub_year' do
-      let(:mapper) { SwMapper.new('oo000oo0000') }
+      let(:mapper) { described_class.new('oo000oo0000') }
       before(:example) do
         allow(mapper).to receive(:modsxml).and_return(smods_rec.from_str(coll_created_mods))
       end
@@ -328,7 +415,7 @@ describe SwMapper do
     end
 
     describe '#positive_int?' do
-      let(:mapper) { SwMapper.new('zz999zz9999') }
+      let(:mapper) { described_class.new('zz999zz9999') }
       it 'returns true of integer version of string is > 0' do
         expect(mapper.send(:positive_int?, '250')).to be true
       end
