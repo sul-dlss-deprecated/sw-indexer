@@ -13,6 +13,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'config'
 
 gem 'honeybadger', '~> 2.0'
+gem 'okcomputer' # for monitoring
 
 gem 'rubocop', group: [:development, :test]
 gem 'rubocop-rspec', group: [:development, :test]
