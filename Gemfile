@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'base_indexer', '3.0.0.pre1'
+gem 'base_indexer', git: 'https://github.com/sul-dlss/base_indexer', branch: 'try-pre'
 
 gem 'rails', '~> 4.2'
 gem 'responders', '~> 2.0'
