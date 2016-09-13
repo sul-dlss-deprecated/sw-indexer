@@ -41,9 +41,9 @@ GEM
       sshkit (>= 1.6.1, != 1.7.0)
     arel (6.0.3)
     ast (2.3.0)
-    base_indexer (3.0.0.pre1)
-      discovery-indexer (~> 2.0.0)
-      is_it_working-cbeer
+    base_indexer (3.0.0)
+      discovery-indexer (>= 2, <= 4.0)
+      dor-fetcher
       rails (~> 4)
       retries
     builder (3.2.2)
@@ -87,7 +87,7 @@ GEM
       safe_yaml (~> 1.0.0)
     deep_merge (1.1.1)
     diff-lcs (1.2.5)
-    discovery-indexer (2.0.0)
+    discovery-indexer (3.0.0)
       nokogiri
       rest-client
       retries
@@ -99,8 +99,11 @@ GEM
       capistrano-one_time_key
       capistrano-releaseboard
     docile (1.1.5)
-    domain_name (0.5.20160615)
+    domain_name (0.5.20160826)
       unf (>= 0.0.5, < 1.0.0)
+    dor-fetcher (1.1.7)
+      addressable
+      rest-client
     equivalent-xml (0.6.0)
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
@@ -113,7 +116,6 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
-    is_it_working-cbeer (1.0.16)
     iso-639 (0.2.8)
     jbuilder (2.6.0)
       activesupport (>= 3.0.0, < 5.1)
@@ -258,7 +260,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  base_indexer (= 3.0.0.pre1)
+  base_indexer (~> 3.0)
   byebug
   capistrano (~> 3.0)
   capistrano-bundler
@@ -266,6 +268,7 @@ DEPENDENCIES
   capistrano-rvm
   config
   coveralls
+  discovery-indexer (~> 3.0)
   dlss-capistrano
   equivalent-xml
   honeybadger (~> 2.0)
