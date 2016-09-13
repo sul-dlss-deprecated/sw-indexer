@@ -32,8 +32,7 @@ describe SwIndexerEngine do
       it 'completes process' do
         item_xml = Nokogiri::XML(item_image_xml)
         item_xml.xpath('//rdf:RDF', 'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#').remove
-        stub_request(:get, 'https://purl.stanford.edu/druid:zz999zz9999.xml')
-          .to_return(status: 200, body: item_xml.to_xml)
+        stub_purl_and_solr
         expect(subject.index(item_pid, 'SEARCHWORKSPREVIEW' => true)).to be_nil
       end
     end
