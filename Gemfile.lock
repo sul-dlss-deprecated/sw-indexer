@@ -145,6 +145,7 @@ GEM
       activesupport (>= 3.2.18)
       i18n
       nokogiri
+    okcomputer (1.11.1)
     parser (2.3.1.2)
       ast (~> 2.2)
     pkg-config (1.1.7)
@@ -269,6 +270,7 @@ DEPENDENCIES
   equivalent-xml
   honeybadger (~> 2.0)
   jbuilder (~> 2.0)
+  okcomputer
   rails (~> 4.2)
   responders (~> 2.0)
   rspec-rails
