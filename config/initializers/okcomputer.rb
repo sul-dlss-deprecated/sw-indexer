@@ -18,6 +18,15 @@ class VersionCheck < OkComputer::AppVersionCheck
 end
 OkComputer::Registry.register 'version', VersionCheck.new
 
+# Pings a specific solr core -- assumes Solr is configured to use PingRequestHandler
+# @see https://cwiki.apache.org/confluence/display/solr/Ping
+class SolrCoreCheck < OkComputer::HttpCheck
+  # @param [String] `url` to Solr core
+  def initialize(url)
+    super(URI.parse(url + '/admin/ping').to_s)
+  end
+end
+
 # Check each Solr target to see whether it's alive
 class TargetsCheck < OkComputer::Check
   def targets
@@ -31,7 +40,7 @@ class TargetsCheck < OkComputer::Check
   def check
     message = ""
     targets.each_pair do |k, v|
-      check = OkComputer::HttpCheck.new(URI.parse(v['url']).to_s)
+      check = SolrCoreCheck.new(v['url'])
       check.check
       if check.success?
         message += "Target #{k} is up. "
