@@ -3,8 +3,7 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
   #
   # @param druid [String] is the druid for an object e.g., ab123cd4567
   # @param targets [Hash] is an hash with the targets list along with the
-  #   release tag value for each target; if it is nil, the method will read the
-  #   target list and release tag value from release_tags
+  #   release tag value for each target sent from controller action.
   #
   # @raise it will raise errors if any problems happen in any level
   def index(druid, targets = nil)
