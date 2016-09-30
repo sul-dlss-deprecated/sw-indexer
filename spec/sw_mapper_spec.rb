@@ -348,8 +348,8 @@ describe SwMapper do
       expect(mapper.public_xml_to_fields).to be_an_instance_of(Hash)
     end
     it ':file_id from #file_ids' do
-      expect(mapper).to receive(:file_ids).and_return(['file1', 'file2'])
-      expect(mapper.public_xml_to_fields[:file_id]).to eq ['file1', 'file2']
+      expect(mapper).to receive(:thumb).and_return('file1')
+      expect(mapper.public_xml_to_fields[:file_id]).to eq 'file1'
     end
     it ':collection from #collection_ids' do
       expect(mapper).to receive(:collection_ids).and_return(['coll_id1', 'coll_id2'])
@@ -422,29 +422,29 @@ describe SwMapper do
     end
   end
 
-  describe '#file_ids' do
+  describe '#thumb' do
     let(:fake_druid) { 'zz999zz9999' }
     let(:purl_xml_model) { DiscoveryIndexer::InputXml::PurlxmlModel.new }
     let(:mapper) { described_class.new(fake_druid) }
-    it 'is populated with the first image_id only if dor_content_type is book, image, manuscript, map, or webarchive-seed' do
+    it 'is populated with the thumb only if dor_content_type is book, image, manuscript, map, or webarchive-seed' do
       allow(purl_xml_model).to receive(:is_collection).and_return(false)
-      allow(purl_xml_model).to receive(:sw_image_ids).and_return(['zz999zz9999%2Fa24.jp2', 'zz999zz9999%2Fthumb.jp2'])
+      allow(purl_xml_model).to receive(:thumb).and_return('zz999zz9999/a24.jp2')
       allow(mapper).to receive(:purlxml).and_return(purl_xml_model)
       %w(book image manuscript map webarchive-seed).each { |type|
         allow(purl_xml_model).to receive(:dor_content_type).and_return(type)
-        expect(mapper.send(:file_ids)).to eq 'zz999zz9999%2Fa24.jp2'
+        expect(mapper.send(:thumb)).to eq 'zz999zz9999%2Fa24.jp2'
       }
     end
     it 'is nil if it is a collection' do
       allow(purl_xml_model).to receive(:is_collection).and_return(true)
       allow(mapper).to receive(:purlxml).and_return(purl_xml_model)
-      expect(mapper.send(:file_ids)).to eq nil
+      expect(mapper.send(:thumb)).to eq nil
     end
     it 'is nil if dor_content_type is not book, image, manuscript, map, or webarchive-seed' do
       allow(purl_xml_model).to receive(:is_collection).and_return(false)
       allow(purl_xml_model).to receive(:dor_content_type).and_return('file')
       allow(mapper).to receive(:purlxml).and_return(purl_xml_model)
-      expect(mapper.send(:file_ids)).to eq nil
+      expect(mapper.send(:thumb)).to eq nil
     end
   end
 
