@@ -87,7 +87,7 @@ GEM
       safe_yaml (~> 1.0.0)
     deep_merge (1.1.1)
     diff-lcs (1.2.5)
-    discovery-indexer (3.0.1)
+    discovery-indexer (3.1.1)
       nokogiri
       rest-client
       retries
@@ -113,7 +113,7 @@ GEM
       activesupport (>= 4.1.0)
     hashdiff (0.3.0)
     honeybadger (2.6.1)
-    http-cookie (1.0.2)
+    http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.7.0)
     iso-639 (0.2.8)
@@ -129,7 +129,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
-    minitest (5.9.0)
+    minitest (5.9.1)
     mods (2.1.0)
       iso-639
       nokogiri
@@ -140,9 +140,8 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (3.2.0)
     netrc (0.11.0)
-    nokogiri (1.6.8)
+    nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
-      pkg-config (~> 1.1.7)
     nom-xml (0.6.0)
       activesupport (>= 3.2.18)
       i18n
@@ -150,7 +149,6 @@ GEM
     okcomputer (1.11.1)
     parser (2.3.1.2)
       ast (~> 2.2)
-    pkg-config (1.1.7)
     powerpack (0.1.1)
     rack (1.6.4)
     rack-test (0.6.3)
@@ -268,7 +266,7 @@ DEPENDENCIES
   capistrano-rvm
   config
   coveralls
-  discovery-indexer (~> 3.0, >= 3.0.1)
+  discovery-indexer (~> 3.0, >= 3.1.1)
   dlss-capistrano
   equivalent-xml
   honeybadger (~> 2.0)

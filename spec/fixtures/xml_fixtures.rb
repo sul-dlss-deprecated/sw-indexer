@@ -173,7 +173,7 @@ module XmlFixtures
         <dc:relation type="collection">DC relation Collection title</dc:relation>
       </oai_dc:dc>
       <ReleaseDigest/>
-      <thumb>zz999zz9999%2Fa24.jp2</thumb>
+      <thumb>zz999zz9999/a24.jp2</thumb>
     </publicObject>
     xml
   end

@@ -428,7 +428,7 @@ describe SwMapper do
     let(:mapper) { described_class.new(fake_druid) }
     it 'is populated with the thumb only if dor_content_type is book, image, manuscript, map, or webarchive-seed' do
       allow(purl_xml_model).to receive(:is_collection).and_return(false)
-      allow(purl_xml_model).to receive(:thumb).and_return('zz999zz9999/a24.jp2')
+      allow(purl_xml_model).to receive(:encoded_thumb).and_return('zz999zz9999%2Fa24.jp2')
       allow(mapper).to receive(:purlxml).and_return(purl_xml_model)
       %w(book image manuscript map webarchive-seed).each { |type|
         allow(purl_xml_model).to receive(:dor_content_type).and_return(type)
