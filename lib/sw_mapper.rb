@@ -130,7 +130,7 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
 
   def public_xml_to_fields
     {
-      file_id: file_ids,
+      file_id: thumb,
       collection: collection_ids,
       collection_with_title: collection_with_title,
       set: constituent_ids,
@@ -153,13 +153,12 @@ class SwMapper < DiscoveryIndexer::GeneralMapper
     str.to_i >= 0
   end
 
-  # the @id attribute of resource/file elements that match the dor_content_type
   # value is used to tell SearchWorks UI app of specific display needs for objects
-  # The SearchWorks app only wants first image id which comes from purl_model.sw_image_ids
-  # @return [String] filename
-  def file_ids
-    return if purlxml.is_collection
-    purlxml.sw_image_ids.first if %w(book image manuscript map webarchive-seed).include?(purlxml.dor_content_type)
+  # this comes from the <thumb> element in publicXML or the first image found (as parsed by discovery-indexer)
+  # @return [String] filename or nil if none found
+  def thumb
+    return if purlxml.is_collection 
+    purlxml.encoded_thumb if %w(book image manuscript map webarchive-seed).include?(purlxml.dor_content_type)
   end
 
   # the ids of objects of which this object is a collection member

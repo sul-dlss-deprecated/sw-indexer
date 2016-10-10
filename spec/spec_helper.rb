@@ -1,6 +1,11 @@
 require 'coveralls'
 Coveralls.wear!('rails')
 
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
+  SimpleCov::Formatter::HTMLFormatter,
+  Coveralls::SimpleCov::Formatter
+])
+
 require 'fixtures/xml_fixtures'
 
 require 'webmock/rspec'
