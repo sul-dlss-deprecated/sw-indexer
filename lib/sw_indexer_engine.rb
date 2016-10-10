@@ -10,13 +10,14 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
 
     targets ||= {}
 
-    # If a catkey exists in the purl_model, stop processing the druid and leave
-    # the method because access to the digital object will be provided by an 856
-    # in the corresponding MARC record
+    ##
+    # When a target is not in SKIP_CATKEY_CHECK and its true, check the catkey
+    # If there is a catkey, set false so that the target gets a delete message.
+    # We do this so that the "dor" index doesn't get docs indexed that are
+    # already coming from the marc record.
     targets.each do |target_key, target_value|
-      if target_value == true && !Settings.SKIP_CATKEY_CHECK.include?(target_key)
-        return nil if purl_model(druid).catkey.present?
-      end
+      next unless target_value == true && !Settings.SKIP_CATKEY_CHECK.include?(target_key)
+      targets[target_key] = false if purl_model(druid).catkey.present?
     end
 
     # Create the solr document for indexing using the Searchworks mapper and the
