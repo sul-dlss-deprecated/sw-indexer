@@ -9,9 +9,15 @@ describe SwIndexerEngine do
 
   describe 'index' do
     context 'for targets that should not be skipped checking' do
-      it 'returns nil if there is a catkey present' do
+      it 'calls solr delete for the index' do
         expect(subject).to receive(:purl_model).with(item_pid).and_return(ckey_doc)
-        expect(subject.index(item_pid, 'NOTTOBESKIPPED' => true)).to be_nil
+        stub_purl('druid:zz999zz9999', item_image_xml, item_image_mods)
+        stub_collection('oo000oo0000', coll_image_xml)
+        solr_stub = stub_request(:post, /solr/)
+          .with(body: /^.*<delete><id>druid:zz999zz9999/)
+          .to_return(status: 200, body: '')
+        subject.index(item_pid, 'MYSOLR' => true)
+        expect(solr_stub).to have_been_requested
       end
       it 'proceeds with indexing' do
         stub_purl_and_solr('druid:zz999zz9999', item_image_xml, item_image_mods)
