@@ -44,4 +44,4 @@ class TargetsCheck < OkComputer::Check
   end
 end
 
-OkComputer::Registry.register 'targets', TargetsCheck.new
+OkComputer::Registry.register 'feature-targets', TargetsCheck.new
