@@ -146,7 +146,7 @@ GEM
       activesupport (>= 3.2.18)
       i18n
       nokogiri
-    okcomputer (1.11.1)
+    okcomputer (1.13.0)
     parser (2.3.1.2)
       ast (~> 2.2)
     powerpack (0.1.1)
@@ -281,4 +281,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.12.5
+   1.13.5
