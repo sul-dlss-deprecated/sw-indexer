@@ -7,6 +7,5 @@ Code to harvest SearchWorks metadata from DOR and index it into Solr for the Sea
 ## Installing
 
 * checkout code
-* cp config/solr.yml.example config/sw-solr.yml
 * edit config/sw-solr.yml file to add in actual solr URLs for each target
 * bundle install
