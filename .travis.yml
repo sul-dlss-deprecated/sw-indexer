@@ -2,7 +2,7 @@ notifications:
   email: false
 
 rvm:
-  - 2.2.0
+  - 2.4.0
 
 env:
   global:
@@ -11,9 +11,6 @@ env:
 sudo: false
 language: ruby
 cache: bundler
-
-before_script:
-- cp config/solr.yml.example config/solr.yml
 
 script: bundle exec rake ci
 
