@@ -18,6 +18,8 @@ gem 'okcomputer' # for monitoring
 gem 'rubocop', group: [:development, :test]
 gem 'rubocop-rspec', group: [:development, :test]
 
+gem 'faraday'
+
 group :test do
   gem 'rspec-rails'
   gem 'equivalent-xml'

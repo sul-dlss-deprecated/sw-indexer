@@ -1,3 +1,4 @@
 PURL_URL: https://purl.stanford.edu
 SKIP_CATKEY_CHECK:
   - SEARCHWORKSPREVIEW
+DOR_SERVICES_URL: http://user:password@localhost:9292/v1

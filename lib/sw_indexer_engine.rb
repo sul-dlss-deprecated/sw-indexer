@@ -9,16 +9,22 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
   def index(druid, targets = nil)
 
     targets ||= {}
+    update_marc_record_needed = false
 
     ##
     # When a target is not in SKIP_CATKEY_CHECK and its true, check the catkey
-    # If there is a catkey, set false so that the target gets a delete message.
+    # If there is a catkey, set false so that the target gets a delete message and indicate we need a call to the 856 marc generation service.
     # We do this so that the "dor" index doesn't get docs indexed that are
     # already coming from the marc record.
     targets.each do |target_key, target_value|
       next unless target_value == true && !Settings.SKIP_CATKEY_CHECK.include?(target_key)
-      targets[target_key] = false if purl_model(druid).catkey.present?
+      if purl_model(druid).catkey.present?
+        targets[target_key] = false
+        update_marc_record_needed = true
+      end
     end
+
+    update_marc_record(druid) if update_marc_record_needed
 
     # Create the solr document for indexing using the Searchworks mapper and the
     # mods, purl, and collection information
@@ -31,5 +37,11 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
 
   def purl_model(druid)
     DiscoveryIndexer::InputXml::Purlxml.new(druid).load
+  end
+
+  def update_marc_record(druid)
+    url = "#{Settings.DOR_SERVICES_URL}/objects/#{druid}/update_marc_record"
+    conn = Faraday.new(url: url)
+    conn.post
   end
 end
