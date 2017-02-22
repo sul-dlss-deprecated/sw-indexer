@@ -1,14 +1,28 @@
 ##
 # Helper methods used for tests
 module Helpers
-  def stub_solr
+
+  def dor_services_stub
+    stub_request(:post, "http://localhost:9292/v1/objects/druid:zz999zz9999/update_marc_record")
+          .with(:headers => {'Accept'=>'*/*', 'Content-Length'=>'0'})
+          .to_return(:status => 200, :body => "", :headers => {})
+  end
+
+  def post_stub_solr
     stub_request(:post, /solr/)
-      .to_return(status: 200, body: '')
+          .with(body: /^.*<add/)
+          .to_return(status: 200, body: '')
+  end
+
+  def delete_stub_solr
+    stub_request(:post, /solr/)
+          .with(body: /^.*<delete>/)
+          .to_return(status: 200, body: '')
   end
 
   def stub_purl_and_solr(druid, purl_xml, mods_xml)
     stub_purl(druid, purl_xml, mods_xml)
-    stub_solr
+    post_stub_solr
   end
 
   def stub_purl(druid, purl_xml, mods_xml)
