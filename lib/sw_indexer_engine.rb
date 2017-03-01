@@ -1,4 +1,7 @@
 class SwIndexerEngine < BaseIndexer::MainIndexerEngine
+
+  attr_reader :purl
+
   # This is the main Searchworks indexing function for StanfordSync
   #
   # @param druid [String] is the druid for an object e.g., ab123cd4567
@@ -9,22 +12,22 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
   def index(druid, targets = nil)
 
     targets ||= {}
+    @purl = DiscoveryIndexer::InputXml::Purlxml.new(druid).load
     update_marc_record_needed = false
 
     ##
     # When a target is not in SKIP_CATKEY_CHECK and its true, check the catkey
-    # If there is a catkey, set false so that the target gets a delete message and indicate we need a call to the 856 marc generation service.
+    # If there is a catkey, set false so that the target gets a delete message.
+    # If there is a current or previous cateky, also indicate we need a call to the 856 marc generation service.
     # We do this so that the "dor" index doesn't get docs indexed that are
     # already coming from the marc record.
     targets.each do |target_key, target_value|
       next unless target_value == true && !Settings.SKIP_CATKEY_CHECK.include?(target_key)
-      if purl_model(druid).catkey.present?
-        targets[target_key] = false
-        update_marc_record_needed = true
-      end
+      targets[target_key] = false if @purl.catkey.present?
+      update_marc_record_needed = true if (@purl.catkey.present? || @purl.previous_catkeys.present?)
     end
 
-    update_marc_record(druid) if update_marc_record_needed
+    update_marc_record if update_marc_record_needed
 
     # Create the solr document for indexing using the Searchworks mapper and the
     # mods, purl, and collection information
@@ -35,13 +38,10 @@ class SwIndexerEngine < BaseIndexer::MainIndexerEngine
     BaseIndexer.solr_writer_class_name.constantize.new.process(druid, solr_doc, targets, solr_targets_configs)
   end
 
-  def purl_model(druid)
-    DiscoveryIndexer::InputXml::Purlxml.new(druid).load
-  end
-
-  def update_marc_record(druid)
-    url = "#{Settings.DOR_SERVICES_URL}/objects/#{druid}/update_marc_record"
+  def update_marc_record
+    url = "#{Settings.DOR_SERVICES_URL}/objects/#{@purl.druid}/update_marc_record"
     conn = Faraday.new(url: url)
     conn.post
   end
+
 end
