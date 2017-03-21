@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
 
 gem 'base_indexer', '~> 4.0'
-gem 'discovery-indexer', '~> 3.0', '>= 3.1.1'
+gem 'discovery-indexer', '~> 3.0', '>= 3.1.2'
 
 gem 'responders', '~> 2.0'
 
@@ -17,6 +17,8 @@ gem 'okcomputer' # for monitoring
 
 gem 'rubocop', group: [:development, :test]
 gem 'rubocop-rspec', group: [:development, :test]
+
+gem 'faraday'
 
 group :test do
   gem 'rspec-rails'

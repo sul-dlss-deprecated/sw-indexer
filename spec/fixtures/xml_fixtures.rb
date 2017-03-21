@@ -178,6 +178,227 @@ module XmlFixtures
     xml
   end
 
+  def item_image_xml_with_catkey
+    <<-xml
+    <publicObject id="druid:zz999zz9999" published="2015-02-26T14:10:51-08:00">
+      <identityMetadata>
+        <sourceId source="hoover">2012c34_3_a</sourceId>
+        <objectId>druid:zz999zz9999</objectId>
+        <objectCreator>DOR</objectCreator>
+        <objectLabel>Item Title</objectLabel>
+        <objectType>item</objectType>
+        <adminPolicy>druid:aa111bb2222</adminPolicy>
+        <otherId name="label"/>
+        <otherId name="catkey">12345</otherId>
+        <otherId name="uuid">080ac28c-5159-11e3-815a-0050569b3c3c</otherId>
+        <tag>Process : Content Type : Image</tag>
+        <tag>Project : Collection</tag>
+        <tag>Registered By : blalbrit</tag>
+        <tag>Remediated By : 4.17.1</tag>
+      </identityMetadata>
+      <contentMetadata objectId="zz999zz9999" type="image">
+        <resource id="zz999zz9999_1" sequence="1" type="image">
+          <label>Image 1</label>
+          <file id="a24.jp2" mimetype="image/jp2" size="3674159">
+            <imageData width="5334" height="3660"/>
+          </file>
+        </resource>
+        <resource id="zz999zz9999_2" sequence="2" type="image">
+          <label>Image 2</label>
+          <file id="a25.jp2" mimetype="image/jp2" size="3706126">
+            <imageData width="5508" height="3576"/>
+          </file>
+        </resource>
+        <resource id="zz999zz9999_3" sequence="3" type="image">
+          <label>Image 3</label>
+          <file id="a26.jp2" mimetype="image/jp2" size="2543862">
+            <imageData width="3450" height="3918"/>
+          </file>
+        </resource>
+        <resource id="zz999zz9999_4" sequence="4" type="image">
+          <label>Image 4</label>
+          <file id="a27.jp2" mimetype="image/jp2" size="3370403">
+            <imageData width="4950" height="3618"/>
+          </file>
+        </resource>
+        <resource id="zz999zz9999_5" sequence="5" type="image">
+          <label>Image 5</label>
+          <file id="a28.jp2" mimetype="image/jp2" size="3471135">
+            <imageData width="4950" height="3726"/>
+          </file>
+        </resource>
+      </contentMetadata>
+      <rightsMetadata>
+        <access type="discover">
+          <machine>
+            <world/>
+          </machine>
+        </access>
+        <access type="read">
+          <machine>
+            <world/>
+          </machine>
+        </access>
+        <use>
+          <human type="useAndReproduction"/>
+          <human type="creativeCommons"/>
+          <machine type="creativeCommons"/>
+        </use>
+        <copyright>
+          <human type="copyright">Copyright</human>
+        </copyright>
+      </rightsMetadata>
+      <rdf:RDF xmlns:fedora="info:fedora/fedora-system:def/relations-external#" xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:hydra="http://projecthydra.org/ns/relations#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description rdf:about="info:fedora/druid:zz999zz9999">
+          <fedora:isMemberOf rdf:resource="info:fedora/druid:oo000oo0000"/>
+          <fedora:isMemberOfCollection rdf:resource="info:fedora/druid:oo000oo0000"/>
+        </rdf:Description>
+      </rdf:RDF>
+      <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+        <dc:title>DC title</dc:title>
+        <dc:contributor>DC contributor</dc:contributor>
+        <dc:type>StillImage</dc:type>
+        <dc:date>1909-1915</dc:date>
+        <dc:relation type="collection">DC relation Collection title</dc:relation>
+      </oai_dc:dc>
+      <ReleaseDigest/>
+      <thumb>zz999zz9999/a24.jp2</thumb>
+    </publicObject>
+    xml
+  end
+
+  def item_image_xml_previous_catkeys
+    <<-xml
+    <publicObject id="druid:zz999zz9999" published="2015-02-26T14:10:51-08:00">
+      <identityMetadata>
+        <sourceId source="hoover">2012c34_3_a</sourceId>
+        <objectId>druid:zz999zz9999</objectId>
+        <objectCreator>DOR</objectCreator>
+        <objectLabel>Item Title</objectLabel>
+        <objectType>item</objectType>
+        <adminPolicy>druid:aa111bb2222</adminPolicy>
+        <otherId name="label"/>
+        <otherId name="previous_catkey">000</otherId>
+        <otherId name="previous_catkey">999</otherId>
+        <otherId name="uuid">080ac28c-5159-11e3-815a-0050569b3c3c</otherId>
+        <tag>Process : Content Type : Image</tag>
+        <tag>Project : Collection</tag>
+        <tag>Registered By : blalbrit</tag>
+        <tag>Remediated By : 4.17.1</tag>
+      </identityMetadata>
+      <contentMetadata objectId="zz999zz9999" type="image">
+        <resource id="zz999zz9999_1" sequence="1" type="image">
+          <label>Image 1</label>
+          <file id="a24.jp2" mimetype="image/jp2" size="3674159">
+            <imageData width="5334" height="3660"/>
+          </file>
+        </resource>
+      </contentMetadata>
+      <rightsMetadata>
+        <access type="discover">
+          <machine>
+            <world/>
+          </machine>
+        </access>
+        <access type="read">
+          <machine>
+            <world/>
+          </machine>
+        </access>
+        <use>
+          <human type="useAndReproduction"/>
+          <human type="creativeCommons"/>
+          <machine type="creativeCommons"/>
+        </use>
+        <copyright>
+          <human type="copyright">Copyright</human>
+        </copyright>
+      </rightsMetadata>
+      <rdf:RDF xmlns:fedora="info:fedora/fedora-system:def/relations-external#" xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:hydra="http://projecthydra.org/ns/relations#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description rdf:about="info:fedora/druid:zz999zz9999">
+          <fedora:isMemberOf rdf:resource="info:fedora/druid:oo000oo0000"/>
+          <fedora:isMemberOfCollection rdf:resource="info:fedora/druid:oo000oo0000"/>
+        </rdf:Description>
+      </rdf:RDF>
+      <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+        <dc:title>DC title</dc:title>
+        <dc:contributor>DC contributor</dc:contributor>
+        <dc:type>StillImage</dc:type>
+        <dc:date>1909-1915</dc:date>
+        <dc:relation type="collection">DC relation Collection title</dc:relation>
+      </oai_dc:dc>
+      <ReleaseDigest/>
+      <thumb>zz999zz9999/a24.jp2</thumb>
+    </publicObject>
+    xml
+  end
+
+  def item_image_xml_previous_and_current_catkey
+    <<-xml
+    <publicObject id="druid:zz999zz9999" published="2015-02-26T14:10:51-08:00">
+      <identityMetadata>
+        <sourceId source="hoover">2012c34_3_a</sourceId>
+        <objectId>druid:zz999zz9999</objectId>
+        <objectCreator>DOR</objectCreator>
+        <objectLabel>Item Title</objectLabel>
+        <objectType>item</objectType>
+        <adminPolicy>druid:aa111bb2222</adminPolicy>
+        <otherId name="label"/>
+        <otherId name="previous_catkey">000</otherId>
+        <otherId name="catkey">12345</otherId>
+        <otherId name="uuid">080ac28c-5159-11e3-815a-0050569b3c3c</otherId>
+        <tag>Process : Content Type : Image</tag>
+        <tag>Project : Collection</tag>
+        <tag>Registered By : blalbrit</tag>
+        <tag>Remediated By : 4.17.1</tag>
+      </identityMetadata>
+      <contentMetadata objectId="zz999zz9999" type="image">
+        <resource id="zz999zz9999_1" sequence="1" type="image">
+          <label>Image 1</label>
+          <file id="a24.jp2" mimetype="image/jp2" size="3674159">
+            <imageData width="5334" height="3660"/>
+          </file>
+        </resource>
+      </contentMetadata>
+      <rightsMetadata>
+        <access type="discover">
+          <machine>
+            <world/>
+          </machine>
+        </access>
+        <access type="read">
+          <machine>
+            <world/>
+          </machine>
+        </access>
+        <use>
+          <human type="useAndReproduction"/>
+          <human type="creativeCommons"/>
+          <machine type="creativeCommons"/>
+        </use>
+        <copyright>
+          <human type="copyright">Copyright</human>
+        </copyright>
+      </rightsMetadata>
+      <rdf:RDF xmlns:fedora="info:fedora/fedora-system:def/relations-external#" xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:hydra="http://projecthydra.org/ns/relations#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description rdf:about="info:fedora/druid:zz999zz9999">
+          <fedora:isMemberOf rdf:resource="info:fedora/druid:oo000oo0000"/>
+          <fedora:isMemberOfCollection rdf:resource="info:fedora/druid:oo000oo0000"/>
+        </rdf:Description>
+      </rdf:RDF>
+      <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:srw_dc="info:srw/schema/1/dc-schema" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+        <dc:title>DC title</dc:title>
+        <dc:contributor>DC contributor</dc:contributor>
+        <dc:type>StillImage</dc:type>
+        <dc:date>1909-1915</dc:date>
+        <dc:relation type="collection">DC relation Collection title</dc:relation>
+      </oai_dc:dc>
+      <ReleaseDigest/>
+      <thumb>zz999zz9999/a24.jp2</thumb>
+    </publicObject>
+    xml
+  end
+
   def item_file_xml
     <<-xml
     <publicObject id="druid:zz999zz9999" published="2015-02-26T14:10:51-08:00">
