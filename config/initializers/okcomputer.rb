@@ -21,9 +21,7 @@ OkComputer::Registry.register 'version', VersionCheck.new
 # Check each Solr target to see whether it's alive
 class TargetsCheck < OkComputer::Check
   def targets
-    # TODO: the solr.yml configuration does NOT get initialized until `after_initialize`
-    # i.e., until all initializers are run. So we have to do a lazy evaluation here
-    @targets ||= BaseIndexer.solr_configuration_class_name.constantize.instance.get_configuration_hash
+    @targets ||= Settings.SOLR_TARGETS.to_hash.deep_stringify_keys
     raise "OkComputer: Targets not configured" unless @targets.present?
     @targets
   end

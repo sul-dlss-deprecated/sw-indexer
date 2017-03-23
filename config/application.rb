@@ -24,12 +24,11 @@ module SwIndexerService
     # config.i18n.default_locale = :de
 
 
-    config.autoload_paths += %W(#{config.root}/lib)
+    config.eager_load_paths << Rails.root.join('lib')
     config.app_version = VERSION # read from VERSION file at base of website
     config.app_name = 'SearchWorks-Indexing-Service'
-    config.solr_config_file_path = "#{config.root}/config/solr.yml"
     config.dor_fetcher_url = 'https://dorfetcher-prod.stanford.edu'
-    
+
     ##
     # Set PURL config DiscoveryIndexer
     DiscoveryIndexer::PURL_DEFAULT = Settings.PURL_URL

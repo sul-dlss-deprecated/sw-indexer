@@ -1,7 +1,5 @@
 SOLR_TARGETS:
   MYSOLR:
-    target1:
-      url: http://solr-cloud/mysolr
+    url: http://solr-cloud/mysolr
   SEARCHWORKSPREVIEW:
-    target1:
-      url: http://solr-cloud/searchworkspreview
+    url: http://solr-cloud/searchworkspreview
