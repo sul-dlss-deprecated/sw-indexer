@@ -18,6 +18,18 @@ class VersionCheck < OkComputer::AppVersionCheck
 end
 OkComputer::Registry.register 'version', VersionCheck.new
 
+# Check that we can reach the configured dor-services-app endpoint
+class DorServicesCheck < OkComputer::AppVersionCheck
+  def check
+      url = "#{Settings.DOR_SERVICES_URL}/about"
+      result = Faraday.new(url: url).get
+      raise "OkComputer: dor-services-app at #{url} is not returning 200. Code returned = #{result.status}" unless result.status == 200
+    rescue
+      raise "OkComputer: dor-services-app at #{url} cannot be reached"
+  end
+end
+OkComputer::Registry.register 'dor-services', DorServicesCheck.new
+
 # Check each Solr target to see whether it's alive
 class TargetsCheck < OkComputer::Check
   def targets
