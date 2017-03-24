@@ -11,6 +11,14 @@ describe SwIndexerEngine do
     stub_collection('oo000oo0000', coll_image_xml)
   end
 
+  describe 'setup' do
+    it 'can inititalize the correct class name and read settings correctly' do
+      expect(BaseIndexer.mapper_class_name.constantize).to eq SwMapper
+      expect(Settings.PURL_URL).to eq 'https://purl.stanford.edu'
+      expect(Settings.SOLR_TARGETS.to_hash.deep_stringify_keys).to eq({"MYSOLR" => {"url"=>"http://solr-cloud/mysolr"},"SEARCHWORKSPREVIEW" => {"url"=>"http://solr-cloud/searchworkspreview"}})
+    end
+  end
+
   describe 'index' do
     context 'for targets that should be checked for catkeys' do
       # NOTE: The MYSOLR target has catkey checks applied

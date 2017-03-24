@@ -18,12 +18,22 @@ class VersionCheck < OkComputer::AppVersionCheck
 end
 OkComputer::Registry.register 'version', VersionCheck.new
 
+# Check that we can reach the configured dor-services-app endpoint
+class DorServicesCheck < OkComputer::AppVersionCheck
+  def check
+      url = "#{Settings.DOR_SERVICES_URL}/about"
+      result = Faraday.new(url: url).get
+      raise "OkComputer: dor-services-app at #{url} is not returning 200. Code returned = #{result.status}" unless result.status == 200
+    rescue
+      raise "OkComputer: dor-services-app at #{url} cannot be reached"
+  end
+end
+OkComputer::Registry.register 'dor-services', DorServicesCheck.new
+
 # Check each Solr target to see whether it's alive
 class TargetsCheck < OkComputer::Check
   def targets
-    # TODO: the solr.yml configuration does NOT get initialized until `after_initialize`
-    # i.e., until all initializers are run. So we have to do a lazy evaluation here
-    @targets ||= BaseIndexer.solr_configuration_class_name.constantize.instance.get_configuration_hash
+    @targets ||= Settings.SOLR_TARGETS.to_hash.deep_stringify_keys
     raise "OkComputer: Targets not configured" unless @targets.present?
     @targets
   end
