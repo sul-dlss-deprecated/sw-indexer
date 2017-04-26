@@ -16,5 +16,5 @@ Rails.application.configure do
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
-  config.dor_fetcher_url = 'https://dorfetcher-prod.stanford.edu'
+  config.fetcher_url = 'https://dorfetcher-prod.stanford.edu'
 end
