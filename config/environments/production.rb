@@ -61,5 +61,5 @@ Rails.application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.dor_fetcher_url = 'https://dorfetcher-prod.stanford.edu'
+  config.fetcher_url = 'https://dorfetcher-prod.stanford.edu'
 end
