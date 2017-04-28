@@ -27,7 +27,6 @@ module SwIndexerService
     config.eager_load_paths << Rails.root.join('lib')
     config.app_version = VERSION # read from VERSION file at base of website
     config.app_name = 'SearchWorks-Indexing-Service'
-    config.dor_fetcher_url = 'https://dorfetcher-prod.stanford.edu'
 
     ##
     # Set PURL config DiscoveryIndexer
