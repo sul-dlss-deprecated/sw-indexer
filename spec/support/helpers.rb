@@ -10,13 +10,13 @@ module Helpers
 
   def post_stub_solr
     stub_request(:post, /solr/)
-          .with(body: /^.*<add/)
+          .with(body: /^{"add"/)
           .to_return(status: 200, body: '')
   end
 
   def delete_stub_solr
     stub_request(:post, /solr/)
-          .with(body: /^.*<delete>/)
+          .with(body: /^{"delete"/)
           .to_return(status: 200, body: '')
   end
 
