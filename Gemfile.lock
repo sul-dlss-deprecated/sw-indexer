@@ -44,7 +44,7 @@ GEM
       sshkit (>= 1.6.1, != 1.7.0)
     arel (8.0.0)
     ast (2.4.0)
-    base_indexer (4.1.0)
+    base_indexer (4.2.0)
       config
       discovery-indexer (>= 2, < 4)
       dor-fetcher
@@ -299,7 +299,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  base_indexer (~> 4.1)
+  base_indexer (~> 4.2)
   byebug
   capistrano (~> 3.0)
   capistrano-bundler

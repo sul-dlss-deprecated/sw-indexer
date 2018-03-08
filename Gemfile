@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.1.0'
 
-gem 'base_indexer', '~> 4.1'
+gem 'base_indexer', '~> 4.2'
 gem 'discovery-indexer', '~> 3.0', '>= 3.1.2'
 
 gem 'responders', '~> 2.0'
