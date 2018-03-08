@@ -6,6 +6,7 @@ AllCops:
   Exclude:
     - '.internal_test_app/**/*'
     - 'bin/**/*'
+    - 'config/**/*'
     - 'db/**/*'
     - 'vendor/**/*'
 
