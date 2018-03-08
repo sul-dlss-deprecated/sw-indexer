@@ -16,4 +16,4 @@ set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/sys
 set :keep_releases, 5
 
 # honeybadger_env otherwise defaults to rails_env
-set :honeybadger_env, "#{fetch(:stage)}"
+set :honeybadger_env, fetch(:stage)
