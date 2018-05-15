@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sul-dlss/sw-indexer.svg?branch=master)](https://travis-ci.org/sul-dlss/sw-indexer) [![Coverage Status](https://coveralls.io/repos/github/sul-dlss/sw-indexer/badge.svg?branch=master)](https://coveralls.io/github/sul-dlss/sw-indexer?branch=master) [![Dependency Status](https://gemnasium.com/sul-dlss/sw-indexer.svg)](https://gemnasium.com/sul-dlss/sw-indexer)
+[![Build Status](https://travis-ci.org/sul-dlss/sw-indexer.svg?branch=master)](https://travis-ci.org/sul-dlss/sw-indexer) [![Coverage Status](https://coveralls.io/repos/github/sul-dlss/sw-indexer/badge.svg?branch=master)](https://coveralls.io/github/sul-dlss/sw-indexer?branch=master)
 
 # SwIndexerService
 
