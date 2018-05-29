@@ -1,6 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.1.0'
+gem 'rails', '~> 5.2.0'
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
+
 
 gem 'base_indexer', '~> 4.2'
 gem 'discovery-indexer', '~> 3.0', '>= 3.1.2'
