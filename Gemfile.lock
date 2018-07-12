@@ -188,6 +188,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (5.0.2)
     netrc (0.11.0)
+    newrelic_rpm (5.2.0.345)
     nio4r (2.3.1)
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
@@ -326,6 +327,7 @@ DEPENDENCIES
   faraday
   honeybadger (~> 3.0)
   jbuilder (~> 2.5)
+  newrelic_rpm
   okcomputer
   rails (~> 5.2.0)
   responders (~> 2.0)

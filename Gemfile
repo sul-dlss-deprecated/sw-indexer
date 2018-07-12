@@ -41,4 +41,5 @@ group :deployment do
   gem 'capistrano-bundler'
   gem 'capistrano-rvm'
   gem 'capistrano-passenger'
+  gem 'newrelic_rpm'
 end
