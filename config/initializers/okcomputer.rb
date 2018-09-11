@@ -41,7 +41,7 @@ class TargetsCheck < OkComputer::Check
   def check
     message = ""
     targets.each_pair do |k, v|
-      check = OkComputer::SolrCheck.new(v['url'])
+      check = OkComputer::HttpCheck.new(v['url'] + '/admin/ping')
       check.check
       if check.success?
         message += "Target #{k} is up. "
